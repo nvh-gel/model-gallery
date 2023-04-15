@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.0.5'
     id 'io.spring.dependency-management' version '1.1.0'
+    id 'com.google.cloud.tools.jib' version '3.3.1'
 }
 
 group = 'com.eden'
@@ -16,6 +17,29 @@ configurations {
 
 jar {
     enabled = false
+}
+
+jib {
+    from {
+        image = 'openjdk:17-slim'
+    }
+    to {
+        image = 'nvhien2703/model-gallery'
+        tags = [version, 'latest']
+        auth {
+            username = System.getenv('DOCKER_USERNAME')
+            password = System.getenv('DOCKER_PASSWORD')
+        }
+    }
+    container {
+        mainClass = "${group}.gallery.ModelGalleryApplication"
+        ports = ['8080']
+        environment = [
+                'VERSION': version,
+                'APPLICATION_PORT': '8080',
+                'DEVELOPMENT_MODE': 'false'
+        ]
+    }
 }
 
 file("versions.properties").withReader {
