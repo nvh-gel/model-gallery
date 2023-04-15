@@ -21,6 +21,7 @@ public class Model extends BaseModel {
     private Integer yearOfBirth;
     private LocalDate dateOfBirth;
     private String thumbnail;
+    private String url;
 
     @OneToMany(mappedBy = "model", cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     private List<Nickname> nicknames;
