@@ -39,12 +39,16 @@ public class ModelServiceImpl implements ModelService {
 
     @Override
     public List<ModelVM> findAll() {
-        return List.of();
+
+        List<Model> result = modelRepository.findAll();
+        return modelMapper.toViewModel(result);
     }
 
     @Override
-    public ModelVM findById(Long aLong) {
-        return null;
+    public ModelVM findById(Long id) {
+
+        Model result = modelRepository.findById(id).orElse(null);
+        return modelMapper.toViewModel(result);
     }
 
     @Override
