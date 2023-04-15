@@ -9,4 +9,6 @@ import lombok.EqualsAndHashCode;
 public class NicknameVM extends BaseVM {
 
     private String nick;
+
+    private ModelVM model;
 }
