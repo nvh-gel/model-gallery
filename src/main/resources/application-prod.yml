@@ -2,3 +2,5 @@ spring:
   jpa:
     hibernate:
       ddl-auto: none
+  devtools:
+    add-properties: false

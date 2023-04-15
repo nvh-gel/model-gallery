@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: model-gallery
+  namespace: default
+  labels:
+    k8s-app: model-gallery
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      k8s-app: model-gallery
+  template:
+    metadata:
+      name: model-gallery
+      labels:
+        k8s-app: model-gallery
+    spec:
+      containers:
+        - name: model-gallery
+          image: nvhien2703/model-gallery:latest
+          env:
+            - name: ENV
+              value: local
+            - name: DB_DATABASE
+              value: indiukin
+            - name: DB_USERNAME
+              value: indiukin
+            - name: DB_HOST
+              value: john.db.elephantsql.com
+            - name: DB_PASSWORD
+              value: b2FqcDQSH7WG5df8-I0WY1_CZHXEzEJp
+          securityContext:
+            privileged: false
