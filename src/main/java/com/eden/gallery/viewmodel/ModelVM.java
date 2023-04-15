@@ -16,6 +16,7 @@ public class ModelVM extends BaseVM {
     private Integer yearOfBirth;
     private LocalDate dateOfBirth;
     private String thumbnail;
+    private String url;
 
     private List<NicknameVM> nicknames;
 }
