@@ -1,0 +1,13 @@
+spring:
+  profiles:
+    active: ${env:local}
+  datasource:
+    url: jdbc:postgresql://john.db.elephantsql.com/${DB_DATABASE}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+server:
+  servlet:
+    context-path: /api
+logging:
+  level:
+    root: info
