@@ -21,4 +21,7 @@ public interface ModelMapper extends BaseMapper<Model, ModelVM> {
 
     @Mapping(target = "model", ignore = true)
     NicknameVM toViewModel(Nickname nickname);
+
+    @Mapping(target = "deleted", ignore = true)
+    Nickname toModel(NicknameVM nicknameVM);
 }
