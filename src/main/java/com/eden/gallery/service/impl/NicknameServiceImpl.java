@@ -92,8 +92,16 @@ public class NicknameServiceImpl implements NicknameService {
      * {@inheritDoc}
      */
     @Override
-    public NicknameVM delete(Long aLong) {
-        return null;
+    @Transactional(Transactional.TxType.REQUIRED)
+    public NicknameVM delete(Long id) {
+
+        Nickname exist = nicknameRepository.findById(id).orElse(null);
+        if (null == exist) {
+            return null;
+        }
+        nicknameRepository.deleteById(id);
+        exist.setUpdatedAt(LocalDateTime.now());
+        return nicknameMapper.toViewModel(exist);
     }
 
     /**

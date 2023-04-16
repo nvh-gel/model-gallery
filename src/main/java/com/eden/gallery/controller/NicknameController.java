@@ -43,6 +43,16 @@ public class NicknameController {
         return ResponseModel.updated(updated);
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseModel deleteNick(@PathVariable Long id) {
+
+        NicknameVM deleted = nicknameService.delete(id);
+        if (null == deleted) {
+            return ResponseModel.notFound();
+        }
+        return ResponseModel.deleted(deleted);
+    }
+
     /**
      * Setter
      */
