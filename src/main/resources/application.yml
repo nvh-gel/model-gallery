@@ -5,9 +5,8 @@ spring:
     url: jdbc:postgresql://${DB_HOST}/${DB_DATABASE}
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
-server:
-  servlet:
-    context-path: /api
+  jpa:
+    open-in-view: false
 logging:
   level:
     root: info

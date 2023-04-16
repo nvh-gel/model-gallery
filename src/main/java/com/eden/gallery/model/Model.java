@@ -23,6 +23,6 @@ public class Model extends BaseModel {
     private String thumbnail;
     private String url;
 
-    @OneToMany(mappedBy = "model", cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "model", cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     private List<Nickname> nicknames;
 }

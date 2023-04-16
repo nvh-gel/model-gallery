@@ -1,8 +1,7 @@
+kubectl -- apply --filename local.yml
 
-minikube kubectl -- apply --filename local.yml
+kubectl -- expose deployment model-gallery --type=NodePort --port=8080
 
-minikube kubectl -- expose deployment model-gallery --type=NodePort --port=8080
+minikube service model-gallery
 
-@REM minikube service model-gallery
-
-minikube kubectl -- port-forward service/model-gallery 8080:8080
+kubectl -- port-forward service/model-gallery 8080:8080
