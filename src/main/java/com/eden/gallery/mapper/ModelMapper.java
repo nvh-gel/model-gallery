@@ -49,6 +49,9 @@ public interface ModelMapper extends BaseMapper<Model, ModelVM> {
      */
     @Named(value = "modelToModelId")
     default Long modelToModelId(Model model) {
+        if (null == model) {
+            return null;
+        }
         return model.getId();
     }
 }

@@ -4,10 +4,7 @@ import com.eden.common.utils.ResponseModel;
 import com.eden.gallery.service.NicknameService;
 import com.eden.gallery.viewmodel.NicknameVM;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * Rest controller for managing nickname.
@@ -28,6 +25,22 @@ public class NicknameController {
     public ResponseModel createNick(@RequestBody NicknameVM request) {
 
         return ResponseModel.created(nicknameService.create(request));
+    }
+
+    /**
+     * Update a nickname for model.
+     *
+     * @param request nick updating data
+     * @return updating request
+     */
+    @PutMapping
+    public ResponseModel updateNick(@RequestBody NicknameVM request) {
+
+        NicknameVM updated = nicknameService.update(request);
+        if (null == updated) {
+            return ResponseModel.notFound();
+        }
+        return ResponseModel.updated(updated);
     }
 
     /**
