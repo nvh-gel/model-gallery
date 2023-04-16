@@ -72,8 +72,16 @@ public class ModelServiceImpl implements ModelService {
     }
 
     @Override
-    public ModelVM delete(Long aLong) {
-        return null;
+    @Transactional(Transactional.TxType.REQUIRED)
+    public ModelVM delete(Long id) {
+
+        Model existing = modelRepository.findById(id).orElse(null);
+        if (null == existing) {
+            return null;
+        }
+        modelRepository.deleteById(id);
+        existing.setUpdatedAt(LocalDateTime.now());
+        return modelMapper.toViewModel(existing);
     }
 
     @Override
