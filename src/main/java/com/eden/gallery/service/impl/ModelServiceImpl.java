@@ -52,8 +52,18 @@ public class ModelServiceImpl implements ModelService {
     }
 
     @Override
+    @Transactional(Transactional.TxType.REQUIRED)
     public ModelVM update(ModelVM modelVM) {
-        return null;
+
+        Model existing = modelRepository.findById(modelVM.getId()).orElse(null);
+        if (null == existing) {
+            return null;
+        }
+        Model toUpdate = modelMapper.toModel(modelVM);
+        modelMapper.mapUpdate(existing, toUpdate);
+        existing.setUpdatedAt(LocalDateTime.now());
+        Model updated = modelRepository.save(existing);
+        return modelMapper.toViewModel(updated);
     }
 
     @Override
