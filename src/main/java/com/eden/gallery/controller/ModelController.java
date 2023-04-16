@@ -30,6 +30,12 @@ public class ModelController {
         return ResponseModel.ok(modelService.findById(id));
     }
 
+    @PutMapping
+    public ResponseModel updateModel(@RequestBody ModelVM request) {
+
+        return ResponseModel.updated(modelService.update(request));
+    }
+
     @Autowired
     public void setModelService(ModelService modelService) {
         this.modelService = modelService;
