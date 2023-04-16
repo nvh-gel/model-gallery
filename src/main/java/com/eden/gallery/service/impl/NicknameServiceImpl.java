@@ -66,8 +66,18 @@ public class NicknameServiceImpl implements NicknameService {
      * {@inheritDoc}
      */
     @Override
+    @Transactional(Transactional.TxType.REQUIRED)
     public NicknameVM update(NicknameVM nicknameVM) {
-        return null;
+
+        Nickname exist = nicknameRepository.findById(nicknameVM.getId()).orElse(null);
+        if (null == exist) {
+            return null;
+        }
+        Nickname toUpdate = nicknameMapper.toModel(nicknameVM);
+        nicknameMapper.mapUpdate(exist, toUpdate);
+        exist.setUpdatedAt(LocalDateTime.now());
+        Nickname updated = nicknameRepository.save(exist);
+        return nicknameMapper.toViewModel(updated);
     }
 
     /**

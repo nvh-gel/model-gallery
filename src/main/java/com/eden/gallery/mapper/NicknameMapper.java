@@ -37,6 +37,9 @@ public interface NicknameMapper extends BaseMapper<Nickname, NicknameVM> {
      */
     @Named(value = "modelToModelId")
     default Long modelToModelId(Model model) {
+        if (null == model) {
+            return null;
+        }
         return model.getId();
     }
 
@@ -48,6 +51,9 @@ public interface NicknameMapper extends BaseMapper<Nickname, NicknameVM> {
      */
     @Named(value = "modelIdToModel")
     default Model modelIdToModel(Long modelId) {
+        if (null == modelId) {
+            return null;
+        }
         Model model = new Model();
         model.setId(modelId);
         return model;
