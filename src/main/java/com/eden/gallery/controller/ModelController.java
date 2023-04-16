@@ -36,6 +36,12 @@ public class ModelController {
         return ResponseModel.updated(modelService.update(request));
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseModel deleteModel(@PathVariable Long id) {
+
+        return ResponseModel.deleted(modelService.delete(id));
+    }
+
     @Autowired
     public void setModelService(ModelService modelService) {
         this.modelService = modelService;
