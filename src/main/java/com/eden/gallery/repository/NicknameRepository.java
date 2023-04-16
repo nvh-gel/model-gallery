@@ -1,12 +1,12 @@
 package com.eden.gallery.repository;
 
-import com.eden.gallery.model.Model;
+import com.eden.gallery.model.Nickname;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 /**
- * Repository for model entity.
+ * Repository for nickname entity.
  */
 @Repository
-public interface ModelRepository extends JpaRepository<Model, Long> {
+public interface NicknameRepository extends JpaRepository<Nickname, Long> {
 }

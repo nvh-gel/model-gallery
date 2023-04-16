@@ -14,12 +14,18 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Implementation for model service.
+ */
 @Service
 public class ModelServiceImpl implements ModelService {
 
     private ModelRepository modelRepository;
     private final ModelMapper modelMapper = Mappers.getMapper(ModelMapper.class);
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @Transactional(Transactional.TxType.REQUIRED)
     public ModelVM create(ModelVM modelVM) {
@@ -32,11 +38,17 @@ public class ModelServiceImpl implements ModelService {
         return modelMapper.toViewModel(created);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String createOnQueue(ModelVM modelVM) {
         return null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<ModelVM> findAll() {
 
@@ -44,6 +56,9 @@ public class ModelServiceImpl implements ModelService {
         return modelMapper.toViewModel(result);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public ModelVM findById(Long id) {
 
@@ -51,6 +66,9 @@ public class ModelServiceImpl implements ModelService {
         return modelMapper.toViewModel(result);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @Transactional(Transactional.TxType.REQUIRED)
     public ModelVM update(ModelVM modelVM) {
@@ -66,11 +84,17 @@ public class ModelServiceImpl implements ModelService {
         return modelMapper.toViewModel(updated);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String updateOnQueue(ModelVM modelVM) {
         return null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @Transactional(Transactional.TxType.REQUIRED)
     public ModelVM delete(Long id) {
@@ -84,11 +108,17 @@ public class ModelServiceImpl implements ModelService {
         return modelMapper.toViewModel(existing);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String deleteOnQueue(Long aLong) {
         return null;
     }
 
+    /**
+     * Setter.
+     */
     @Autowired
     public void setModelRepository(ModelRepository modelRepository) {
         this.modelRepository = modelRepository;

@@ -13,6 +13,9 @@ import org.hibernate.annotations.Where;
 import java.time.LocalDate;
 import java.util.List;
 
+/**
+ * Model entity.
+ */
 @Entity
 @Data
 @EqualsAndHashCode(callSuper = true)

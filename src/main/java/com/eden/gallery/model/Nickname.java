@@ -8,6 +8,9 @@ import jakarta.persistence.ManyToOne;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+/**
+ * Nickname entity.
+ */
 @Entity
 @Data
 @EqualsAndHashCode(callSuper = true)
