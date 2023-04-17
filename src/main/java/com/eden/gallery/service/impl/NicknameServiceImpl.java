@@ -120,8 +120,14 @@ public class NicknameServiceImpl implements NicknameService {
      * {@inheritDoc}
      */
     @Override
-    public String deleteOnQueue(Long aLong) {
-        return null;
+    public String deleteOnQueue(Long id) {
+
+        NicknameVM vm = new NicknameVM();
+        vm.setId(id);
+        UUID uuid = UUID.randomUUID();
+        QueueMessage<NicknameVM> queueMessage = new QueueMessage<>(Action.DELETE, uuid, vm);
+        nicknameProducer.send(queueMessage);
+        return uuid.toString();
     }
 
     /**
