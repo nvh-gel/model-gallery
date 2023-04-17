@@ -2,3 +2,10 @@ spring:
   datasource:
     url: jdbc:h2:~/test/test_db
     username: sa
+  kafka:
+    consumer:
+      group-id: ${KAFKA_USERNAME}-test
+    properties:
+      topic:
+        model: ${KAFKA_USERNAME}-model
+        nick: ${KAFKA_USERNAME}-nick
