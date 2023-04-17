@@ -106,7 +106,11 @@ public class ModelServiceImpl implements ModelService {
      */
     @Override
     public String updateOnQueue(ModelVM modelVM) {
-        return null;
+
+        UUID uuid = UUID.randomUUID();
+        QueueMessage<ModelVM> queueMessage = new QueueMessage<>(Action.UPDATE, uuid, modelVM);
+        modelProducer.send(queueMessage);
+        return uuid.toString();
     }
 
     /**

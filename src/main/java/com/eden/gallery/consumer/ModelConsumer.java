@@ -29,6 +29,7 @@ public class ModelConsumer extends BaseConsumer<ModelVM> {
      */
     public ModelConsumer(ModelService modelService) {
         actionMap.put(Action.CREATE, modelService::create);
+        actionMap.put(Action.UPDATE, modelService::update);
     }
 
     /**
