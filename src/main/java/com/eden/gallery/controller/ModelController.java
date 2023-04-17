@@ -28,7 +28,7 @@ public class ModelController {
     @PostMapping
     public ResponseModel createModel(@RequestBody ModelVM request) {
 
-        return ResponseModel.created(modelService.create(request));
+        return ResponseModel.created(modelService.createOnQueue(request));
     }
 
     /**
