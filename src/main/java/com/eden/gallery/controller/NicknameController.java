@@ -24,7 +24,7 @@ public class NicknameController {
     @PostMapping
     public ResponseModel createNick(@RequestBody NicknameVM request) {
 
-        return ResponseModel.created(nicknameService.create(request));
+        return ResponseModel.created(nicknameService.createOnQueue(request));
     }
 
     /**
@@ -36,21 +36,13 @@ public class NicknameController {
     @PutMapping
     public ResponseModel updateNick(@RequestBody NicknameVM request) {
 
-        NicknameVM updated = nicknameService.update(request);
-        if (null == updated) {
-            return ResponseModel.notFound();
-        }
-        return ResponseModel.updated(updated);
+        return ResponseModel.updated(nicknameService.updateOnQueue(request));
     }
 
     @DeleteMapping("/{id}")
     public ResponseModel deleteNick(@PathVariable Long id) {
 
-        NicknameVM deleted = nicknameService.delete(id);
-        if (null == deleted) {
-            return ResponseModel.notFound();
-        }
-        return ResponseModel.deleted(deleted);
+        return ResponseModel.deleted(nicknameService.deleteOnQueue(id));
     }
 
     /**

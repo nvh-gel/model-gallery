@@ -28,7 +28,7 @@ public class ModelController {
     @PostMapping
     public ResponseModel createModel(@RequestBody ModelVM request) {
 
-        return ResponseModel.created(modelService.create(request));
+        return ResponseModel.created(modelService.createOnQueue(request));
     }
 
     /**
@@ -63,7 +63,7 @@ public class ModelController {
     @PutMapping
     public ResponseModel updateModel(@RequestBody ModelVM request) {
 
-        return ResponseModel.updated(modelService.update(request));
+        return ResponseModel.updated(modelService.updateOnQueue(request));
     }
 
     /**
@@ -75,7 +75,7 @@ public class ModelController {
     @DeleteMapping("/{id}")
     public ResponseModel deleteModel(@PathVariable Long id) {
 
-        return ResponseModel.deleted(modelService.delete(id));
+        return ResponseModel.deleted(modelService.deleteOnQueue(id));
     }
 
     /**

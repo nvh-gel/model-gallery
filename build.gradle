@@ -6,8 +6,15 @@ plugins {
 }
 
 group = 'com.eden'
-version = '0.0.1'
 sourceCompatibility = '17'
+
+file("versions.properties").withReader {
+    Properties props = new Properties()
+    props.load(it)
+    project.ext.versions = props
+}
+
+version = versions.version
 
 configurations {
     compileOnly {
@@ -17,6 +24,10 @@ configurations {
 
 jar {
     enabled = false
+}
+
+springBoot {
+    buildInfo()
 }
 
 jib {
@@ -35,18 +46,13 @@ jib {
         mainClass = "${group}.gallery.ModelGalleryApplication"
         ports = ['8080']
         environment = [
-                'VERSION': version,
+                'VERSION'         : version,
                 'APPLICATION_PORT': '8080',
                 'DEVELOPMENT_MODE': 'false'
         ]
     }
 }
 
-file("versions.properties").withReader {
-    Properties props = new Properties()
-    props.load(it)
-    project.ext.versions = props
-}
 
 repositories {
     mavenCentral()
@@ -62,9 +68,11 @@ repositories {
 dependencies {
     implementation "com.eden:common-libs:${versions.common}"
     implementation "com.eden:common-data:${versions.common}"
+    implementation "com.eden:common-queue:${versions.common}"
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation "org.mapstruct:mapstruct:${versions.mapstruct}"
+    implementation 'org.springframework.kafka:spring-kafka'
 
     compileOnly 'org.projectlombok:lombok'
 
@@ -75,6 +83,7 @@ dependencies {
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'com.h2database:h2'
+    testImplementation 'org.springframework.kafka:spring-kafka-test'
 }
 
 tasks.named('test') {
