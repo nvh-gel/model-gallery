@@ -93,7 +93,11 @@ public class NicknameServiceImpl implements NicknameService {
      */
     @Override
     public String updateOnQueue(NicknameVM nicknameVM) {
-        return null;
+
+        UUID uuid = UUID.randomUUID();
+        QueueMessage<NicknameVM> queueMessage = new QueueMessage<>(Action.UPDATE, uuid, nicknameVM);
+        nicknameProducer.send(queueMessage);
+        return uuid.toString();
     }
 
     /**

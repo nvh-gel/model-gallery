@@ -36,11 +36,7 @@ public class NicknameController {
     @PutMapping
     public ResponseModel updateNick(@RequestBody NicknameVM request) {
 
-        NicknameVM updated = nicknameService.update(request);
-        if (null == updated) {
-            return ResponseModel.notFound();
-        }
-        return ResponseModel.updated(updated);
+        return ResponseModel.updated(nicknameService.updateOnQueue(request));
     }
 
     @DeleteMapping("/{id}")
