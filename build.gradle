@@ -3,6 +3,7 @@ plugins {
     id 'org.springframework.boot' version '3.0.5'
     id 'io.spring.dependency-management' version '1.1.0'
     id 'com.google.cloud.tools.jib' version '3.3.1'
+    id 'jacoco'
 }
 
 group = 'com.eden'
@@ -14,7 +15,7 @@ file("versions.properties").withReader {
     project.ext.versions = props
 }
 
-version = versions.version
+version = "${versions.version}"
 
 configurations {
     compileOnly {
@@ -53,6 +54,9 @@ jib {
     }
 }
 
+jacoco {
+    toolVersion = versions.jacoco
+}
 
 repositories {
     mavenCentral()
@@ -88,4 +92,36 @@ dependencies {
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+test {
+    finalizedBy jacocoTestCoverageVerification, jacocoTestReport
+    jacoco {
+        excludes = [
+                'com.eden.gallery.mapper.*Impl',
+                'com.eden.gallery.ModelGalleryApplication',
+        ]
+    }
+}
+
+jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            limit {
+                minimum = 0.1
+            }
+        }
+    }
+}
+
+jacocoTestReport {
+    dependsOn test
+    afterEvaluate {
+        getClassDirectories().setFrom(classDirectories.files.collect {
+            fileTree(dir: it, exclude: [
+                    '**/com/eden/gallery/mapper/*Impl.class',
+                    '**/com/eden/gallery/ModelGalleryApplication.class',
+            ])
+        })
+    }
 }
