@@ -62,9 +62,11 @@ repositories {
 dependencies {
     implementation "com.eden:common-libs:${versions.common}"
     implementation "com.eden:common-data:${versions.common}"
+    implementation "com.eden:common-queue:${versions.common}"
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation "org.mapstruct:mapstruct:${versions.mapstruct}"
+    implementation 'org.springframework.kafka:spring-kafka'
 
     compileOnly 'org.projectlombok:lombok'
 
@@ -75,6 +77,7 @@ dependencies {
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'com.h2database:h2'
+    testImplementation 'org.springframework.kafka:spring-kafka-test'
 }
 
 tasks.named('test') {
