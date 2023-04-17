@@ -7,6 +7,9 @@ import lombok.EqualsAndHashCode;
 import java.time.LocalDate;
 import java.util.List;
 
+/**
+ * DTO for model.
+ */
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class ModelVM extends BaseVM {
