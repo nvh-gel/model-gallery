@@ -63,7 +63,7 @@ public class ModelController {
     @PutMapping
     public ResponseModel updateModel(@RequestBody ModelVM request) {
 
-        return ResponseModel.updated(modelService.update(request));
+        return ResponseModel.updated(modelService.updateOnQueue(request));
     }
 
     /**
