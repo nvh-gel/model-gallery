@@ -24,7 +24,7 @@ public class NicknameController {
     @PostMapping
     public ResponseModel createNick(@RequestBody NicknameVM request) {
 
-        return ResponseModel.created(nicknameService.create(request));
+        return ResponseModel.created(nicknameService.createOnQueue(request));
     }
 
     /**
