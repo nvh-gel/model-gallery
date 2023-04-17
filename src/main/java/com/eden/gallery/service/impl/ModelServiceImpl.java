@@ -133,8 +133,14 @@ public class ModelServiceImpl implements ModelService {
      * {@inheritDoc}
      */
     @Override
-    public String deleteOnQueue(Long aLong) {
-        return null;
+    public String deleteOnQueue(Long id) {
+
+        ModelVM modelVM = new ModelVM();
+        modelVM.setId(id);
+        UUID uuid = UUID.randomUUID();
+        QueueMessage<ModelVM> queueMessage = new QueueMessage<>(Action.DELETE, uuid, modelVM);
+        modelProducer.send(queueMessage);
+        return uuid.toString();
     }
 
     /**

@@ -75,7 +75,7 @@ public class ModelController {
     @DeleteMapping("/{id}")
     public ResponseModel deleteModel(@PathVariable Long id) {
 
-        return ResponseModel.deleted(modelService.delete(id));
+        return ResponseModel.deleted(modelService.deleteOnQueue(id));
     }
 
     /**
