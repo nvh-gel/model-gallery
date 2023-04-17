@@ -29,6 +29,7 @@ public class NicknameConsumer extends BaseConsumer<NicknameVM> {
     public NicknameConsumer(NicknameService nicknameService) {
 
         actionMap.put(Action.CREATE, nicknameService::create);
+        actionMap.put(Action.UPDATE, nicknameService::update);
     }
 
     /**
