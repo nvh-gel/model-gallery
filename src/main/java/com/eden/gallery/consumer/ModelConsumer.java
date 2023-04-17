@@ -1,6 +1,7 @@
 package com.eden.gallery.consumer;
 
 import com.eden.gallery.service.ModelService;
+import com.eden.gallery.utils.Strings;
 import com.eden.gallery.viewmodel.ModelVM;
 import com.eden.queue.consumer.BaseConsumer;
 import com.eden.queue.util.Action;
@@ -40,7 +41,7 @@ public class ModelConsumer extends BaseConsumer<ModelVM> {
     @KafkaListener(topics = "${spring.kafka.properties.topic.model}")
     public void processMessage(QueueMessage<ModelVM> queueMessage) {
 
-        log.info("Received message {} from topic {}", queueMessage, topic);
+        log.info(Strings.RECEIVED_MESSAGE_FROM_TOPIC, queueMessage, topic);
         UnaryOperator<ModelVM> action = actionMap.getOrDefault(queueMessage.getAction(), null);
         if (null != action) {
             action.apply(queueMessage.getMessage());

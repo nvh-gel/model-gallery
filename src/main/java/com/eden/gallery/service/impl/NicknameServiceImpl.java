@@ -2,9 +2,12 @@ package com.eden.gallery.service.impl;
 
 import com.eden.gallery.mapper.NicknameMapper;
 import com.eden.gallery.model.Nickname;
+import com.eden.gallery.producer.NicknameProducer;
 import com.eden.gallery.repository.NicknameRepository;
 import com.eden.gallery.service.NicknameService;
 import com.eden.gallery.viewmodel.NicknameVM;
+import com.eden.queue.util.Action;
+import com.eden.queue.util.QueueMessage;
 import jakarta.transaction.Transactional;
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +25,7 @@ public class NicknameServiceImpl implements NicknameService {
 
     private NicknameRepository nicknameRepository;
     private final NicknameMapper nicknameMapper = Mappers.getMapper(NicknameMapper.class);
+    private NicknameProducer nicknameProducer;
 
     /**
      * {@inheritDoc}
@@ -43,7 +47,11 @@ public class NicknameServiceImpl implements NicknameService {
      */
     @Override
     public String createOnQueue(NicknameVM nicknameVM) {
-        return null;
+
+        UUID uuid = UUID.randomUUID();
+        QueueMessage<NicknameVM> queueMessage = new QueueMessage<>(Action.CREATE, uuid, nicknameVM);
+        nicknameProducer.send(queueMessage);
+        return uuid.toString();
     }
 
     /**
@@ -118,5 +126,13 @@ public class NicknameServiceImpl implements NicknameService {
     @Autowired
     public void setNicknameRepository(NicknameRepository nicknameRepository) {
         this.nicknameRepository = nicknameRepository;
+    }
+
+    /**
+     * Setter.
+     */
+    @Autowired
+    public void setNicknameProducer(NicknameProducer nicknameProducer) {
+        this.nicknameProducer = nicknameProducer;
     }
 }
