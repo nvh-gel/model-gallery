@@ -1,7 +1,10 @@
 package com.eden.gallery.controller;
 
 import com.eden.common.utils.ResponseModel;
+import com.eden.common.utils.SearchRequest;
 import com.eden.gallery.service.ModelService;
+import com.eden.gallery.utils.ModelCriteria;
+import com.eden.gallery.utils.PageConverter;
 import com.eden.gallery.viewmodel.ModelVM;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 public class ModelController {
 
     private ModelService modelService;
+    private PageConverter pageConverter;
 
     /**
      * Create model from request.
@@ -75,10 +79,30 @@ public class ModelController {
     }
 
     /**
+     * Search model by criteria.
+     *
+     * @param request search criteria and paging.
+     * @return response of found models matched the criteria
+     */
+    @GetMapping("/search")
+    public ResponseModel searchModel(@RequestBody SearchRequest<ModelCriteria> request) {
+
+        return pageConverter.toResponseFromPaging(modelService.searchModel(request));
+    }
+
+    /**
      * Setter.
      */
     @Autowired
     public void setModelService(ModelService modelService) {
         this.modelService = modelService;
+    }
+
+    /**
+     * Setter.
+     */
+    @Autowired
+    public void setPageConverter(PageConverter pageConverter) {
+        this.pageConverter = pageConverter;
     }
 }
