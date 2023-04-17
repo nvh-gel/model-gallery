@@ -1,13 +1,19 @@
 package com.eden.gallery.service.impl;
 
+import com.eden.common.utils.Paging;
+import com.eden.common.utils.SearchRequest;
 import com.eden.gallery.mapper.ModelMapper;
 import com.eden.gallery.model.Model;
 import com.eden.gallery.repository.ModelRepository;
+import com.eden.gallery.search.SpecificationBuilder;
+import com.eden.gallery.search.impl.ModelSpecificationBuilder;
 import com.eden.gallery.service.ModelService;
+import com.eden.gallery.utils.ModelCriteria;
 import com.eden.gallery.viewmodel.ModelVM;
 import jakarta.transaction.Transactional;
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -114,6 +120,23 @@ public class ModelServiceImpl implements ModelService {
     @Override
     public String deleteOnQueue(Long aLong) {
         return null;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Page<Model> searchModel(SearchRequest<ModelCriteria> request) {
+
+        Paging paging = Paging.fromPaging(request.getPaging());
+        Pageable pageable = PageRequest.of(
+                paging.getPage() - 1,
+                paging.getPageSize(),
+                Sort.Direction.valueOf(paging.getOrder()),
+                paging.getSortBy());
+
+        SpecificationBuilder<Model> specBuilder = new ModelSpecificationBuilder(request.getCriteria());
+        return modelRepository.findAll(specBuilder.build(), pageable);
     }
 
     /**
