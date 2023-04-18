@@ -13,6 +13,7 @@ spring:
       topic:
         model: ${KAFKA_USERNAME}-model
         nick: ${KAFKA_USERNAME}-nick
+        account: ${KAFKA_USERNAME}-account
       security:
         protocol: SASL_SSL
       sasl:

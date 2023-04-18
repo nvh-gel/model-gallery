@@ -1,6 +1,6 @@
 package com.eden.gallery.producer;
 
-import com.eden.gallery.viewmodel.ModelVM;
+import com.eden.gallery.viewmodel.AccountVM;
 import com.eden.queue.producer.BaseProducer;
 import com.eden.queue.util.QueueMessage;
 import lombok.extern.log4j.Log4j2;
@@ -12,22 +12,23 @@ import org.springframework.stereotype.Component;
 import static com.eden.queue.util.Strings.SEND_MESSAGE;
 
 /**
- * Kafka producer for model handling.
+ * Kafka producer for account.
  */
 @Component
 @Log4j2
-public class ModelProducer implements BaseProducer<ModelVM> {
+public class AccountProducer implements BaseProducer<AccountVM> {
 
-    private KafkaTemplate<String, QueueMessage<ModelVM>> kafkaTemplate;
+    private KafkaTemplate<String, QueueMessage<AccountVM>> kafkaTemplate;
 
-    @Value("${spring.kafka.properties.topic.model}")
+    @Value("${spring.kafka.properties.topic.account}")
     private String topic;
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void send(QueueMessage<ModelVM> queueMessage) {
+    public void send(QueueMessage<AccountVM> queueMessage) {
+
         log.info(SEND_MESSAGE, queueMessage, topic);
         this.kafkaTemplate.send(topic, queueMessage.getId().toString(), queueMessage);
     }
@@ -36,7 +37,7 @@ public class ModelProducer implements BaseProducer<ModelVM> {
      * Setter.
      */
     @Autowired
-    public void setKafkaTemplate(KafkaTemplate<String, QueueMessage<ModelVM>> kafkaTemplate) {
+    public void setKafkaTemplate(KafkaTemplate<String, QueueMessage<AccountVM>> kafkaTemplate) {
         this.kafkaTemplate = kafkaTemplate;
     }
 }
