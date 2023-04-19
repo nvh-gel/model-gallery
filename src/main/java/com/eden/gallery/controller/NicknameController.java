@@ -39,6 +39,12 @@ public class NicknameController {
         return ResponseModel.updated(nicknameService.updateOnQueue(request));
     }
 
+    /**
+     * Delete a nickname by id.
+     *
+     * @param id nickname id to delete
+     * @return deletion result
+     */
     @DeleteMapping("/{id}")
     public ResponseModel deleteNick(@PathVariable Long id) {
 
