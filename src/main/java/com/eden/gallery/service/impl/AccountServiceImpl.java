@@ -6,6 +6,7 @@ import com.eden.gallery.producer.AccountProducer;
 import com.eden.gallery.repository.AccountRepository;
 import com.eden.gallery.service.AccountService;
 import com.eden.gallery.viewmodel.AccountVM;
+import com.eden.gallery.viewmodel.LogInData;
 import com.eden.queue.util.Action;
 import jakarta.transaction.Transactional;
 import org.mapstruct.factory.Mappers;
@@ -171,6 +172,26 @@ public class AccountServiceImpl implements AccountService {
         accountVM.setId(id);
         accountVM.setIsVerified(true);
         return accountProducer.sendMessageToQueue(Action.UPDATE, accountVM);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String login(LogInData logInData) {
+
+        Account existing = accountRepository.findAccountByUsernameAndPasswordEquals(
+                logInData.getUsername(),
+                logInData.getPassword()).orElse(null);
+        if (null == existing) {
+            return null;
+        }
+        String tokenStr = LocalDateTime.now() + " " + UUID.randomUUID();
+        String token = Base64.getEncoder().encodeToString(tokenStr.getBytes());
+
+        existing.setToken(token);
+        accountRepository.save(existing);
+        return token;
     }
 
     /**

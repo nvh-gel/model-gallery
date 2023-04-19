@@ -2,6 +2,7 @@ package com.eden.gallery.service;
 
 import com.eden.common.service.BaseService;
 import com.eden.gallery.viewmodel.AccountVM;
+import com.eden.gallery.viewmodel.LogInData;
 
 /**
  * Account business services.
@@ -32,4 +33,12 @@ public interface AccountService extends BaseService<AccountVM> {
      * @return null if token fail, else verification transaction id
      */
     String verifyAccount(Long id, String token);
+
+    /**
+     * Attempt logging in.
+     *
+     * @param logInData log in information
+     * @return attempt result
+     */
+    String login(LogInData logInData);
 }

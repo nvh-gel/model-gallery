@@ -4,6 +4,7 @@ import com.eden.common.utils.ResponseModel;
 import com.eden.gallery.service.AccountService;
 import com.eden.gallery.utils.PageConverter;
 import com.eden.gallery.viewmodel.AccountVM;
+import com.eden.gallery.viewmodel.LogInData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -132,6 +133,16 @@ public class AccountController {
             return ResponseModel.notFound();
         }
         return ResponseModel.updated(result);
+    }
+
+    @PostMapping("/login")
+    public ResponseModel login(@RequestBody LogInData logInData) {
+
+        String result = accountService.login(logInData);
+        if (null == result) {
+            return ResponseModel.error(null);
+        }
+        return ResponseModel.ok(result);
     }
 
     /**
