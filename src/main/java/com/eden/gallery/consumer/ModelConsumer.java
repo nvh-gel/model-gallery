@@ -37,7 +37,8 @@ public class ModelConsumer extends BaseConsumer<ModelVM> {
      * {@inheritDoc}
      */
     @Override
-    @KafkaListener(topics = "${spring.kafka.properties.topic.model}")
+    @KafkaListener(topics = "${spring.kafka.properties.topic.model}",
+            autoStartup = "${spring.kafka.consumer.properties.auto-start:true}")
     public void processMessage(QueueMessage<ModelVM> queueMessage) {
 
         log.info(RECEIVED_MESSAGE, queueMessage, topic);

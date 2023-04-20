@@ -36,7 +36,8 @@ public class NicknameConsumer extends BaseConsumer<NicknameVM> {
      * {@inheritDoc}
      */
     @Override
-    @KafkaListener(topics = "${spring.kafka.properties.topic.nick}")
+    @KafkaListener(topics = "${spring.kafka.properties.topic.nick}",
+            autoStartup = "${spring.kafka.consumer.properties.auto-start:true}")
     public void processMessage(QueueMessage<NicknameVM> queueMessage) {
 
         log.info(RECEIVED_MESSAGE, queueMessage, topic);

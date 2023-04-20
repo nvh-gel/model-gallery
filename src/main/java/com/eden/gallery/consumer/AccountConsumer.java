@@ -38,7 +38,8 @@ public class AccountConsumer extends BaseConsumer<AccountVM> {
      * {@inheritDoc}
      */
     @Override
-    @KafkaListener(topics = "${spring.kafka.properties.topic.account}")
+    @KafkaListener(topics = "${spring.kafka.properties.topic.account}",
+            autoStartup = "${spring.kafka.consumer.properties.auto-start:true}")
     public void processMessage(QueueMessage<AccountVM> queueMessage) {
 
         log.info(RECEIVED_MESSAGE, queueMessage, topic);
