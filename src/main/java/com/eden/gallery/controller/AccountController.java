@@ -2,7 +2,9 @@ package com.eden.gallery.controller;
 
 import com.eden.common.utils.ResponseModel;
 import com.eden.gallery.service.AccountService;
+import com.eden.gallery.utils.PageConverter;
 import com.eden.gallery.viewmodel.AccountVM;
+import com.eden.gallery.viewmodel.LogInData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 public class AccountController {
 
     private AccountService accountService;
+    private final PageConverter<AccountVM> pageConverter = new PageConverter<>();
 
     /**
      * Create account.
@@ -28,14 +31,27 @@ public class AccountController {
     }
 
     /**
-     * Get a list of all accounts.
+     * Get a list accounts.
      *
      * @return list of account
      */
     @GetMapping
     public ResponseModel getAllAccounts() {
 
-        return ResponseModel.ok(accountService.findAll());
+        return pageConverter.toResponseFromIterable(accountService.findAll(1, 10));
+    }
+
+    /**
+     * Get a list of accounts by input page and size.
+     *
+     * @param page page number
+     * @param size page size
+     * @return list of accounts
+     */
+    @GetMapping("/{page}/{size}")
+    public ResponseModel getAllAccountByPage(@PathVariable Integer page, @PathVariable Integer size) {
+
+        return pageConverter.toResponseFromIterable(accountService.findAll(page, size));
     }
 
     /**
@@ -102,6 +118,13 @@ public class AccountController {
         return ResponseModel.updated(accountService.deactivateAccount(id));
     }
 
+    /**
+     * Verify an account by id.
+     *
+     * @param id    account id
+     * @param token verification token generated when creating account
+     * @return verification result
+     */
     @PutMapping("/verify/{id}")
     public ResponseModel verifyAccount(@PathVariable Long id, @RequestParam("token") String token) {
 
@@ -110,6 +133,16 @@ public class AccountController {
             return ResponseModel.notFound();
         }
         return ResponseModel.updated(result);
+    }
+
+    @PostMapping("/login")
+    public ResponseModel login(@RequestBody LogInData logInData) {
+
+        String result = accountService.login(logInData);
+        if (null == result) {
+            return ResponseModel.error(null);
+        }
+        return ResponseModel.ok(result);
     }
 
     /**

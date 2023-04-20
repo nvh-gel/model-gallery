@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 public class ModelController {
 
     private ModelService modelService;
-    private PageConverter pageConverter;
+    private final PageConverter<ModelVM> pageConverter = new PageConverter<>();
 
     /**
      * Create model from request.
@@ -39,7 +39,20 @@ public class ModelController {
     @GetMapping
     public ResponseModel getModels() {
 
-        return ResponseModel.ok(modelService.findAll());
+        return pageConverter.toResponseFromIterable(modelService.findAll(1, 10));
+    }
+
+    /**
+     * Get a list of models by page and size.
+     *
+     * @param page page number
+     * @param size page size
+     * @return list of models
+     */
+    @GetMapping("/{page}/{size}")
+    public ResponseModel getModelsByPage(@PathVariable Integer page, @PathVariable Integer size) {
+
+        return pageConverter.toResponseFromIterable(modelService.findAll(page, size));
     }
 
     /**
@@ -96,13 +109,5 @@ public class ModelController {
     @Autowired
     public void setModelService(ModelService modelService) {
         this.modelService = modelService;
-    }
-
-    /**
-     * Setter.
-     */
-    @Autowired
-    public void setPageConverter(PageConverter pageConverter) {
-        this.pageConverter = pageConverter;
     }
 }

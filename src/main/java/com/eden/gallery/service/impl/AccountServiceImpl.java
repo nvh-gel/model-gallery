@@ -6,15 +6,19 @@ import com.eden.gallery.producer.AccountProducer;
 import com.eden.gallery.repository.AccountRepository;
 import com.eden.gallery.service.AccountService;
 import com.eden.gallery.viewmodel.AccountVM;
+import com.eden.gallery.viewmodel.LogInData;
 import com.eden.queue.util.Action;
-import com.eden.queue.util.QueueMessage;
+import jakarta.transaction.Transactional;
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.Base64;
-import java.util.List;
 import java.util.UUID;
 
 /**
@@ -31,6 +35,7 @@ public class AccountServiceImpl implements AccountService {
      * {@inheritDoc}
      */
     @Override
+    @Transactional(Transactional.TxType.REQUIRED)
     public AccountVM create(AccountVM accountVM) {
 
         Account toCreate = accountMapper.toModel(accountVM);
@@ -49,19 +54,22 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public String createOnQueue(AccountVM accountVM) {
 
-        UUID uuid = UUID.randomUUID();
-        QueueMessage<AccountVM> queueMessage = new QueueMessage<>(Action.CREATE, uuid, accountVM);
-        accountProducer.send(queueMessage);
-        return uuid.toString();
+        return accountProducer.sendMessageToQueue(Action.CREATE, accountVM);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public List<AccountVM> findAll() {
+    public Page<AccountVM> findAll(int page, int size) {
 
-        return accountMapper.toViewModel(accountRepository.findAll());
+        Pageable pageable = PageRequest.of(page > 0 ? page - 1 : 0, size);
+        Page<Account> result = accountRepository.findAll(pageable);
+        return new PageImpl<>(
+                accountMapper.toViewModel(result.toList()),
+                result.getPageable(),
+                result.getTotalElements()
+        );
     }
 
     /**
@@ -77,6 +85,7 @@ public class AccountServiceImpl implements AccountService {
      * {@inheritDoc}
      */
     @Override
+    @Transactional(Transactional.TxType.REQUIRED)
     public AccountVM update(AccountVM accountVM) {
 
         Account exist = accountRepository.findById(accountVM.getId()).orElse(null);
@@ -95,16 +104,14 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public String updateOnQueue(AccountVM accountVM) {
 
-        UUID uuid = UUID.randomUUID();
-        QueueMessage<AccountVM> queueMessage = new QueueMessage<>(Action.UPDATE, uuid, accountVM);
-        accountProducer.send(queueMessage);
-        return uuid.toString();
+        return accountProducer.sendMessageToQueue(Action.UPDATE, accountVM);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
+    @Transactional(Transactional.TxType.REQUIRED)
     public AccountVM delete(Long id) {
 
         Account exist = accountRepository.findById(id).orElse(null);
@@ -124,10 +131,7 @@ public class AccountServiceImpl implements AccountService {
 
         AccountVM accountVM = new AccountVM();
         accountVM.setId(id);
-        UUID uuid = UUID.randomUUID();
-        QueueMessage<AccountVM> queueMessage = new QueueMessage<>(Action.DELETE, uuid, accountVM);
-        accountProducer.send(queueMessage);
-        return uuid.toString();
+        return accountProducer.sendMessageToQueue(Action.DELETE, accountVM);
     }
 
     /**
@@ -139,10 +143,7 @@ public class AccountServiceImpl implements AccountService {
         AccountVM accountVM = new AccountVM();
         accountVM.setId(id);
         accountVM.setIsActive(Boolean.TRUE);
-        UUID uuid = UUID.randomUUID();
-        QueueMessage<AccountVM> queueMessage = new QueueMessage<>(Action.UPDATE, uuid, accountVM);
-        accountProducer.send(queueMessage);
-        return uuid.toString();
+        return accountProducer.sendMessageToQueue(Action.UPDATE, accountVM);
     }
 
     /**
@@ -154,10 +155,7 @@ public class AccountServiceImpl implements AccountService {
         AccountVM accountVM = new AccountVM();
         accountVM.setId(id);
         accountVM.setIsActive(Boolean.FALSE);
-        UUID uuid = UUID.randomUUID();
-        QueueMessage<AccountVM> queueMessage = new QueueMessage<>(Action.UPDATE, uuid, accountVM);
-        accountProducer.send(queueMessage);
-        return uuid.toString();
+        return accountProducer.sendMessageToQueue(Action.UPDATE, accountVM);
     }
 
     /**
@@ -170,13 +168,30 @@ public class AccountServiceImpl implements AccountService {
         if (null == existing) {
             return null;
         }
-        UUID uuid = UUID.randomUUID();
         AccountVM accountVM = new AccountVM();
         accountVM.setId(id);
         accountVM.setIsVerified(true);
-        QueueMessage<AccountVM> queueMessage = new QueueMessage<>(Action.UPDATE, uuid, accountVM);
-        accountProducer.send(queueMessage);
-        return uuid.toString();
+        return accountProducer.sendMessageToQueue(Action.UPDATE, accountVM);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String login(LogInData logInData) {
+
+        Account existing = accountRepository.findAccountByUsernameAndPasswordEquals(
+                logInData.getUsername(),
+                logInData.getPassword()).orElse(null);
+        if (null == existing) {
+            return null;
+        }
+        String tokenStr = LocalDateTime.now() + " " + UUID.randomUUID();
+        String token = Base64.getEncoder().encodeToString(tokenStr.getBytes());
+
+        existing.setToken(token);
+        accountRepository.save(existing);
+        return token;
     }
 
     /**
