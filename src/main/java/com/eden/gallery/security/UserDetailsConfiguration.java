@@ -1,11 +1,13 @@
 package com.eden.gallery.security;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.provisioning.JdbcUserDetailsManager;
+import org.springframework.security.provisioning.UserDetailsManager;
+
+import javax.sql.DataSource;
 
 /**
  * Configuration for user verification.
@@ -13,25 +15,17 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 @Configuration
 public class UserDetailsConfiguration {
 
+    private DataSource dataSource;
+
     /**
      * Configuration for user service.
      *
-     * @param bCryptPasswordEncoder password encrypt bean
      * @return user service for authentication and authorization
      */
     @Bean
-    public UserDetailsService userDetailsService(BCryptPasswordEncoder bCryptPasswordEncoder) {
+    public UserDetailsManager userDetailsManager() {
 
-        InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
-        manager.createUser(User.withUsername("user")
-                .roles("USER")
-                .password(bCryptPasswordEncoder.encode("user"))
-                .build());
-        manager.createUser(User.withUsername("admin")
-                .roles("ADMIN")
-                .password(bCryptPasswordEncoder.encode("admin"))
-                .build());
-        return manager;
+        return new JdbcUserDetailsManager(dataSource);
     }
 
     /**
@@ -42,5 +36,13 @@ public class UserDetailsConfiguration {
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    /**
+     * Setter.
+     */
+    @Autowired
+    public void setDataSource(DataSource dataSource) {
+        this.dataSource = dataSource;
     }
 }

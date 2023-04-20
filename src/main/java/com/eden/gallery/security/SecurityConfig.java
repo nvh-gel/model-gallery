@@ -2,6 +2,7 @@ package com.eden.gallery.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -30,6 +31,9 @@ public class SecurityConfig {
         http.csrf()
                 .disable()
                 .authorizeHttpRequests()
+                .requestMatchers(HttpMethod.POST, "/user").anonymous()
+                .requestMatchers("/user/admin/**").hasRole("ADMIN")
+                .requestMatchers("/healthz").anonymous()
                 .requestMatchers("/").anonymous()
                 .anyRequest().authenticated()
                 .and()

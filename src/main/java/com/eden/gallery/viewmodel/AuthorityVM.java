@@ -5,15 +5,12 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * DTO for account.
+ * DTO for authority.
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class AccountVM extends BaseVM {
+public class AuthorityVM extends BaseVM {
 
     private String username;
-    private String password;
-    private Boolean isActive;
-    private Boolean isVerified;
-    private String email;
+    private String authorities;
 }
