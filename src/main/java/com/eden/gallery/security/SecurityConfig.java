@@ -6,7 +6,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 
@@ -28,33 +27,22 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
+        http.authorizeHttpRequests()
+                .requestMatchers("/css/**", "/js/**", "/img/**", "/lib/**", "/favicon.ico")
+                .permitAll();
+
         http.csrf()
                 .disable()
                 .authorizeHttpRequests()
-                .requestMatchers(HttpMethod.POST, "/user").anonymous()
-                .requestMatchers("/user/admin/**").hasRole("ADMIN")
-                .requestMatchers("/healthz").anonymous()
-                .requestMatchers("/").anonymous()
+                .requestMatchers(HttpMethod.POST, "/user", "/user/login").anonymous()
+                .requestMatchers("/admin/**").hasRole("ADMIN")
+                .requestMatchers("/", "/healthz").anonymous()
                 .anyRequest().authenticated()
                 .and()
                 .httpBasic()
                 .and()
                 .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-        ;
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         return http.build();
-    }
-
-    /**
-     * Ignore specific path for web resources.
-     *
-     * @return security customizer for exception cases
-     */
-    @Bean
-    public WebSecurityCustomizer webSecurityCustomizer() {
-
-        return web -> web
-                .ignoring()
-                .requestMatchers("/css/**", "/js/**", "/img/**", "/lib/**", "/favicon.ico");
     }
 }

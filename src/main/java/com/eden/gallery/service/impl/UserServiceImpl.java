@@ -39,7 +39,7 @@ public class UserServiceImpl implements UserService {
         userDetailsService.createUser(User
                 .withUsername(userVM.getUsername())
                 .password(bCryptPasswordEncoder.encode(userVM.getPassword()))
-                .roles("USER")
+                .roles(userVM.getAuthorities().stream().map(AuthorityVM::getAuthority).toArray(String[]::new))
                 .build()
         );
         return userMapper.toViewModel(userRepository.findByUsername(userVM.getUsername()).orElse(null));
@@ -54,36 +54,57 @@ public class UserServiceImpl implements UserService {
         return userProducer.sendMessageToQueue(Action.CREATE, userVM);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Iterable<UserVM> findAll(int page, int size) {
         return null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public UserVM findById(Long id) {
         return null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public UserVM update(UserVM userVM) {
         return null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String updateOnQueue(UserVM userVM) {
         return null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public UserVM delete(Long id) {
         return null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String deleteOnQueue(Long id) {
         return null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public UserVM create(UserVM request, String... roles) {
 
@@ -95,13 +116,16 @@ public class UserServiceImpl implements UserService {
         return userMapper.toViewModel(userRepository.findByUsername(request.getUsername()).orElse(null));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String createOnQueue(UserVM request, String... roles) {
 
         request.setAuthorities(Arrays.stream(roles).map(r -> {
             AuthorityVM authorityVM = new AuthorityVM();
             authorityVM.setUsername(request.getUsername());
-            authorityVM.setAuthorities(r);
+            authorityVM.setAuthority(r);
             return authorityVM;
         }).toList());
         return userProducer.sendMessageToQueue(Action.CREATE, request);

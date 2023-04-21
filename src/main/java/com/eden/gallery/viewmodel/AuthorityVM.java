@@ -12,5 +12,5 @@ import lombok.EqualsAndHashCode;
 public class AuthorityVM extends BaseVM {
 
     private String username;
-    private String authorities;
+    private String authority;
 }

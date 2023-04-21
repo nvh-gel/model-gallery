@@ -7,6 +7,9 @@ import lombok.EqualsAndHashCode;
 
 import java.util.List;
 
+/**
+ * Data model for user.
+ */
 @Entity(name = "users")
 @Table(uniqueConstraints = {@UniqueConstraint(name = "con_unique_username", columnNames = "username")})
 @Data
@@ -19,5 +22,5 @@ public class User extends BaseModel {
     boolean enabled = true;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
-    List<Authority> authorities;
+    List<Authorities> authorities;
 }

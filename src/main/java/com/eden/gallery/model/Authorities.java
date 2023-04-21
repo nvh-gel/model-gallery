@@ -5,13 +5,15 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-@Entity(name = "authorities")
+/**
+ * Data model for authority.
+ */
+@Entity
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class Authority extends BaseModel {
+public class Authorities extends BaseModel {
 
-    @Column(name = "authority")
-    private String authorities;
+    private String authority;
 
     @ManyToOne(targetEntity = User.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "username",

@@ -9,5 +9,4 @@ spring:
       topic:
         model: ${KAFKA_USERNAME}-model
         nick: ${KAFKA_USERNAME}-nick
-        account: ${KAFKA_USERNAME}-account
         user: ${KAFKA_USERNAME}-user

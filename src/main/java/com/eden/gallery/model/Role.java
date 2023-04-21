@@ -7,6 +7,9 @@ import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
+/**
+ * Data model for user role.
+ */
 @Entity
 @Data
 @EqualsAndHashCode(callSuper = true)

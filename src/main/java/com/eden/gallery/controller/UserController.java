@@ -24,7 +24,7 @@ public class UserController {
     @PostMapping
     public ResponseModel createUser(@RequestBody UserVM request) {
 
-        return ResponseModel.created(userService.createOnQueue(request));
+        return ResponseModel.created(userService.createOnQueue(request, "USER"));
     }
 
     /**
