@@ -15,7 +15,7 @@ file("versions.properties").withReader {
     project.ext.versions = props
 }
 
-version = "${versions.version}"
+version = versions.version
 
 configurations {
     compileOnly {
