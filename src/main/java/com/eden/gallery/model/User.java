@@ -24,6 +24,7 @@ public class User extends BaseModel implements UserDetails {
     @Column(unique = true)
     private String username;
     private String password;
+    private String email;
     private boolean enabled = true;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
