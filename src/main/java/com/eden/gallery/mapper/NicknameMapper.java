@@ -6,10 +6,12 @@ import com.eden.gallery.model.Nickname;
 import com.eden.gallery.viewmodel.NicknameVM;
 import org.mapstruct.*;
 
+import static com.eden.gallery.utils.Strings.SPRING;
+
 /**
  * Data mapper for nickname.
  */
-@Mapper(componentModel = "spring",
+@Mapper(componentModel = SPRING,
         nullValueMappingStrategy = NullValueMappingStrategy.RETURN_NULL,
         nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface NicknameMapper extends BaseMapper<Nickname, NicknameVM> {

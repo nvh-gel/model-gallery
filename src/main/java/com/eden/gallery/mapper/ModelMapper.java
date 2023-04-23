@@ -7,10 +7,12 @@ import com.eden.gallery.viewmodel.ModelVM;
 import com.eden.gallery.viewmodel.NicknameVM;
 import org.mapstruct.*;
 
+import static com.eden.gallery.utils.Strings.SPRING;
+
 /**
  * Data mapper for model.
  */
-@Mapper(componentModel = "spring",
+@Mapper(componentModel = SPRING,
         nullValueMappingStrategy = NullValueMappingStrategy.RETURN_NULL,
         nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface ModelMapper extends BaseMapper<Model, ModelVM> {

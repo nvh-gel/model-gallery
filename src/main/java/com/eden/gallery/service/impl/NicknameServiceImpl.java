@@ -7,14 +7,16 @@ import com.eden.gallery.repository.NicknameRepository;
 import com.eden.gallery.service.NicknameService;
 import com.eden.gallery.viewmodel.NicknameVM;
 import com.eden.queue.util.Action;
-import com.eden.queue.util.QueueMessage;
 import jakarta.transaction.Transactional;
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.UUID;
 
 /**
@@ -48,26 +50,31 @@ public class NicknameServiceImpl implements NicknameService {
     @Override
     public String createOnQueue(NicknameVM nicknameVM) {
 
-        UUID uuid = UUID.randomUUID();
-        QueueMessage<NicknameVM> queueMessage = new QueueMessage<>(Action.CREATE, uuid, nicknameVM);
-        nicknameProducer.send(queueMessage);
-        return uuid.toString();
+        return nicknameProducer.sendMessageToQueue(Action.CREATE, nicknameVM);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public List<NicknameVM> findAll() {
-        return List.of();
+    public Page<NicknameVM> findAll(int page, int size) {
+
+        Pageable pageable = PageRequest.of(page > 0 ? page - 1 : 0, size);
+        Page<Nickname> nicknames = nicknameRepository.findAll(pageable);
+        return new PageImpl<>(
+                nicknameMapper.toViewModel(nicknames.toList()),
+                nicknames.getPageable(),
+                nicknames.getTotalElements()
+        );
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public NicknameVM findById(Long aLong) {
-        return null;
+    public NicknameVM findById(Long id) {
+
+        return nicknameMapper.toViewModel(nicknameRepository.findById(id).orElse(null));
     }
 
     /**
@@ -94,10 +101,7 @@ public class NicknameServiceImpl implements NicknameService {
     @Override
     public String updateOnQueue(NicknameVM nicknameVM) {
 
-        UUID uuid = UUID.randomUUID();
-        QueueMessage<NicknameVM> queueMessage = new QueueMessage<>(Action.UPDATE, uuid, nicknameVM);
-        nicknameProducer.send(queueMessage);
-        return uuid.toString();
+        return nicknameProducer.sendMessageToQueue(Action.UPDATE, nicknameVM);
     }
 
     /**
@@ -122,12 +126,9 @@ public class NicknameServiceImpl implements NicknameService {
     @Override
     public String deleteOnQueue(Long id) {
 
-        NicknameVM vm = new NicknameVM();
-        vm.setId(id);
-        UUID uuid = UUID.randomUUID();
-        QueueMessage<NicknameVM> queueMessage = new QueueMessage<>(Action.DELETE, uuid, vm);
-        nicknameProducer.send(queueMessage);
-        return uuid.toString();
+        NicknameVM nicknameVM = new NicknameVM();
+        nicknameVM.setId(id);
+        return nicknameProducer.sendMessageToQueue(Action.DELETE, nicknameVM);
     }
 
     /**

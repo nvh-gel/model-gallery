@@ -1,7 +1,6 @@
 package com.eden.gallery.consumer;
 
 import com.eden.gallery.service.NicknameService;
-import com.eden.gallery.utils.Strings;
 import com.eden.gallery.viewmodel.NicknameVM;
 import com.eden.queue.consumer.BaseConsumer;
 import com.eden.queue.util.Action;
@@ -11,7 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
-import java.util.function.UnaryOperator;
+import static com.eden.queue.util.Strings.RECEIVED_MESSAGE;
 
 /**
  * Kafka consumer for nickname handling.
@@ -37,13 +36,11 @@ public class NicknameConsumer extends BaseConsumer<NicknameVM> {
      * {@inheritDoc}
      */
     @Override
-    @KafkaListener(topics = "${spring.kafka.properties.topic.nick}")
+    @KafkaListener(topics = "${spring.kafka.properties.topic.nick}",
+            autoStartup = "${spring.kafka.consumer.properties.auto-start:true}")
     public void processMessage(QueueMessage<NicknameVM> queueMessage) {
 
-        log.info(Strings.RECEIVED_MESSAGE_FROM_TOPIC, queueMessage, topic);
-        UnaryOperator<NicknameVM> action = actionMap.getOrDefault(queueMessage.getAction(), null);
-        if (null != action) {
-            action.apply(queueMessage.getMessage());
-        }
+        log.info(RECEIVED_MESSAGE, queueMessage, topic);
+        processByActionMap(queueMessage);
     }
 }

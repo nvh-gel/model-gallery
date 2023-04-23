@@ -12,18 +12,13 @@ import com.eden.gallery.service.ModelService;
 import com.eden.gallery.utils.ModelCriteria;
 import com.eden.gallery.viewmodel.ModelVM;
 import com.eden.queue.util.Action;
-import com.eden.queue.util.QueueMessage;
 import jakarta.transaction.Transactional;
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.UUID;
 
 /**
@@ -57,20 +52,23 @@ public class ModelServiceImpl implements ModelService {
     @Override
     public String createOnQueue(ModelVM modelVM) {
 
-        UUID uuid = UUID.randomUUID();
-        QueueMessage<ModelVM> queueMessage = new QueueMessage<>(Action.CREATE, uuid, modelVM);
-        modelProducer.send(queueMessage);
-        return uuid.toString();
+        return modelProducer.sendMessageToQueue(Action.CREATE, modelVM);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public List<ModelVM> findAll() {
+    public Page<ModelVM> findAll(int page, int size) {
 
-        List<Model> result = modelRepository.findAll();
-        return modelMapper.toViewModel(result);
+        Pageable pageable = PageRequest.of(page > 0 ? page - 1 : 0, size);
+        Page<Model> result = modelRepository.findAll(pageable);
+
+        return new PageImpl<>(
+                modelMapper.toViewModel(result.toList()),
+                result.getPageable(),
+                result.getTotalElements()
+        );
     }
 
     /**
@@ -107,10 +105,7 @@ public class ModelServiceImpl implements ModelService {
     @Override
     public String updateOnQueue(ModelVM modelVM) {
 
-        UUID uuid = UUID.randomUUID();
-        QueueMessage<ModelVM> queueMessage = new QueueMessage<>(Action.UPDATE, uuid, modelVM);
-        modelProducer.send(queueMessage);
-        return uuid.toString();
+        return modelProducer.sendMessageToQueue(Action.UPDATE, modelVM);
     }
 
     /**
@@ -137,17 +132,14 @@ public class ModelServiceImpl implements ModelService {
 
         ModelVM modelVM = new ModelVM();
         modelVM.setId(id);
-        UUID uuid = UUID.randomUUID();
-        QueueMessage<ModelVM> queueMessage = new QueueMessage<>(Action.DELETE, uuid, modelVM);
-        modelProducer.send(queueMessage);
-        return uuid.toString();
+        return modelProducer.sendMessageToQueue(Action.DELETE, modelVM);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Page<Model> searchModel(SearchRequest<ModelCriteria> request) {
+    public Page<ModelVM> searchModel(SearchRequest<ModelCriteria> request) {
 
         Paging paging = Paging.fromPaging(request.getPaging());
         Pageable pageable = PageRequest.of(
@@ -157,7 +149,12 @@ public class ModelServiceImpl implements ModelService {
                 paging.getSortBy());
 
         SpecificationBuilder<Model> specBuilder = new ModelSpecificationBuilder(request.getCriteria());
-        return modelRepository.findAll(specBuilder.build(), pageable);
+        Page<Model> result = modelRepository.findAll(specBuilder.build(), pageable);
+        return new PageImpl<>(
+                result.stream().map(modelMapper::toViewModel).toList(),
+                result.getPageable(),
+                result.getTotalElements()
+        );
     }
 
     /**

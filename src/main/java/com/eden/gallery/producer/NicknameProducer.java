@@ -1,6 +1,5 @@
 package com.eden.gallery.producer;
 
-import com.eden.gallery.utils.Strings;
 import com.eden.gallery.viewmodel.NicknameVM;
 import com.eden.queue.producer.BaseProducer;
 import com.eden.queue.util.QueueMessage;
@@ -9,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
+
+import static com.eden.queue.util.Strings.SEND_MESSAGE;
 
 /**
  * Kafka producer for Nickname handling.
@@ -28,7 +29,7 @@ public class NicknameProducer implements BaseProducer<NicknameVM> {
     @Override
     public void send(QueueMessage<NicknameVM> queueMessage) {
 
-        log.info(Strings.SEND_MESSAGE_TO_TOPIC, queueMessage, topic);
+        log.info(SEND_MESSAGE, queueMessage, topic);
         this.kafkaTemplate.send(topic, queueMessage.getId().toString(), queueMessage);
     }
 

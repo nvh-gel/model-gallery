@@ -1,7 +1,6 @@
 package com.eden.gallery.consumer;
 
 import com.eden.gallery.service.ModelService;
-import com.eden.gallery.utils.Strings;
 import com.eden.gallery.viewmodel.ModelVM;
 import com.eden.queue.consumer.BaseConsumer;
 import com.eden.queue.util.Action;
@@ -11,7 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
-import java.util.function.UnaryOperator;
+import static com.eden.queue.util.Strings.RECEIVED_MESSAGE;
 
 /**
  * Consumer for model service.
@@ -38,13 +37,11 @@ public class ModelConsumer extends BaseConsumer<ModelVM> {
      * {@inheritDoc}
      */
     @Override
-    @KafkaListener(topics = "${spring.kafka.properties.topic.model}")
+    @KafkaListener(topics = "${spring.kafka.properties.topic.model}",
+            autoStartup = "${spring.kafka.consumer.properties.auto-start:true}")
     public void processMessage(QueueMessage<ModelVM> queueMessage) {
 
-        log.info(Strings.RECEIVED_MESSAGE_FROM_TOPIC, queueMessage, topic);
-        UnaryOperator<ModelVM> action = actionMap.getOrDefault(queueMessage.getAction(), null);
-        if (null != action) {
-            action.apply(queueMessage.getMessage());
-        }
+        log.info(RECEIVED_MESSAGE, queueMessage, topic);
+        processByActionMap(queueMessage);
     }
 }
