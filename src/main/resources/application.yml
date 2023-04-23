@@ -13,7 +13,7 @@ spring:
       topic:
         model: ${KAFKA_USERNAME}-model
         nick: ${KAFKA_USERNAME}-nick
-        account: ${KAFKA_USERNAME}-account
+        user: ${KAFKA_USERNAME}-user
       security:
         protocol: SASL_SSL
       sasl:
@@ -36,6 +36,11 @@ spring:
               packages: "*"
       auto-offset-reset: latest
       group-id: ${KAFKA_USERNAME}-${env:local}
+  security:
+    jwt:
+      token:
+        expire: 86400000
+        secret: fWVI7z4dDN6bWG5XNPH7jqPRjWbvbD5n
 logging:
   level:
     root: info

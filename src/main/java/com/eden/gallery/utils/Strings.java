@@ -3,6 +3,9 @@ package com.eden.gallery.utils;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
+/**
+ * Class of static string container.
+ */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Strings {
 

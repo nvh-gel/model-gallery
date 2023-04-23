@@ -4,16 +4,17 @@ import com.eden.common.viewmodel.BaseVM;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.util.List;
+
 /**
- * DTO for account.
+ * DTO for user.
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class AccountVM extends BaseVM {
+public class UserVM extends BaseVM {
 
     private String username;
     private String password;
-    private Boolean isActive;
-    private Boolean isVerified;
-    private String email;
+    private Boolean enabled;
+    private List<AuthorityVM> authorities;
 }
