@@ -31,8 +31,7 @@ public class UserConsumer extends BaseConsumer<UserVM> {
      */
     @Override
     @KafkaListener(topics = "${spring.kafka.properties.topic.user}",
-//            autoStartup = "${spring.kafka.consumer.properties.auto-start:true}"
-            autoStartup = "true"
+            autoStartup = "${spring.kafka.consumer.properties.auto-start:true}"
     )
     public void processMessage(QueueMessage<UserVM> queueMessage) {
 

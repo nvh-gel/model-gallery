@@ -2,8 +2,11 @@ package com.eden.gallery.model;
 
 import com.eden.data.model.BaseModel;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
 
 /**
  * Data model for authority.
@@ -11,7 +14,9 @@ import lombok.EqualsAndHashCode;
 @Entity
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class Authorities extends BaseModel {
+@NoArgsConstructor
+@AllArgsConstructor
+public class Authorities extends BaseModel implements GrantedAuthority {
 
     private String authority;
 
