@@ -12,6 +12,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 
 import java.util.List;
 
@@ -27,6 +28,7 @@ public class SecurityConfig {
             "http://localhost:3000"
     );
     private static final List<String> ALLOW_METHODS = List.of("GET", "PUT", "POST", "OPTIONS");
+    private static final List<String> ALLOW_HEADERS = List.of("Content-Type");
 
     private JwtTokenFilter jwtTokenFilter;
 
@@ -41,6 +43,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http.csrf().disable();
+        http.cors();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         http.authorizeHttpRequests()
@@ -54,8 +57,6 @@ public class SecurityConfig {
                 .anyRequest().authenticated();
 
         http.addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
-        http.cors();
-
         return http.build();
     }
 
@@ -65,13 +66,24 @@ public class SecurityConfig {
      * @return cors config source
      */
     @Bean
-    CorsConfigurationSource corsConfigurationSource() {
+    public CorsConfigurationSource configSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(ALLOW_ORIGINS);
         configuration.setAllowedMethods(ALLOW_METHODS);
+        configuration.setAllowedHeaders(ALLOW_HEADERS);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
+    }
+
+    /**
+     * Configure CORS Filter bean with custom cors configuration source.
+     *
+     * @return cors filter bean
+     */
+    @Bean
+    public CorsFilter corsFilter() {
+        return new CorsFilter(configSource());
     }
 
     /**
