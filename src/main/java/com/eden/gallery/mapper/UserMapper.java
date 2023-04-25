@@ -1,11 +1,15 @@
 package com.eden.gallery.mapper;
 
-import com.eden.data.mapper.BaseMapper;
 import com.eden.gallery.model.Authorities;
 import com.eden.gallery.model.User;
 import com.eden.gallery.viewmodel.AuthorityVM;
 import com.eden.gallery.viewmodel.UserVM;
-import org.mapstruct.*;
+import com.eden.mapper.BaseMapper;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Named;
+import org.mapstruct.NullValueMappingStrategy;
+import org.mapstruct.NullValuePropertyMappingStrategy;
 
 import static com.eden.gallery.utils.Strings.SPRING;
 
@@ -41,6 +45,7 @@ public interface UserMapper extends BaseMapper<User, UserVM> {
      * @return authority VM
      */
     @Mapping(target = "username", source = "user", qualifiedByName = "childAuthorityUserToUsername")
+    @Mapping(target = "objectId", ignore = true)
     AuthorityVM toViewModel(Authorities authorities);
 
     /**

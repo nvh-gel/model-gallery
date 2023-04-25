@@ -1,11 +1,15 @@
 package com.eden.gallery.mapper;
 
-import com.eden.data.mapper.BaseMapper;
 import com.eden.gallery.model.Model;
 import com.eden.gallery.model.Nickname;
 import com.eden.gallery.viewmodel.ModelVM;
 import com.eden.gallery.viewmodel.NicknameVM;
-import org.mapstruct.*;
+import com.eden.mapper.BaseMapper;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Named;
+import org.mapstruct.NullValueMappingStrategy;
+import org.mapstruct.NullValuePropertyMappingStrategy;
 
 import static com.eden.gallery.utils.Strings.SPRING;
 
@@ -31,6 +35,7 @@ public interface ModelMapper extends BaseMapper<Model, ModelVM> {
      * @return nickname view model
      */
     @Mapping(target = "modelId", source = "model", qualifiedByName = "modelToModelId")
+    @Mapping(target = "objectId", ignore = true)
     NicknameVM toViewModel(Nickname nickname);
 
     /**
