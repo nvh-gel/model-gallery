@@ -1,5 +1,6 @@
 package com.eden.gallery.security;
 
+import com.eden.gallery.repository.ConfigRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,6 +15,8 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -24,11 +27,7 @@ import java.util.List;
 @EnableMethodSecurity(securedEnabled = true, jsr250Enabled = true)
 public class SecurityConfig {
 
-    private static final List<String> ALLOW_ORIGINS = List.of(
-            "http://localhost:3000"
-    );
-    private static final List<String> ALLOW_METHODS = List.of("GET", "PUT", "POST", "OPTIONS");
-    private static final List<String> ALLOW_HEADERS = List.of("Content-Type");
+    private ConfigRepository configRepository;
 
     private JwtTokenFilter jwtTokenFilter;
 
@@ -66,10 +65,21 @@ public class SecurityConfig {
      */
     @Bean
     public CorsConfigurationSource configSource() {
+
+        List<String> allowOrigins = configRepository.findById("ALLOWED_ORIGINS")
+                .map(config -> Arrays.stream(config.getValue().split(",")).toList())
+                .orElseGet(Collections::emptyList);
+        List<String> allowMethods = configRepository.findById("ALLOWED_METHODS")
+                .map(config -> Arrays.stream(config.getValue().split(",")).toList())
+                .orElseGet(Collections::emptyList);
+        List<String> allowHeaders = configRepository.findById("ALLOWED_HEADERS")
+                .map(config -> Arrays.stream(config.getValue().split(",")).toList())
+                .orElseGet(Collections::emptyList);
+
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(ALLOW_ORIGINS);
-        configuration.setAllowedMethods(ALLOW_METHODS);
-        configuration.setAllowedHeaders(ALLOW_HEADERS);
+        configuration.setAllowedOrigins(allowOrigins);
+        configuration.setAllowedMethods(allowMethods);
+        configuration.setAllowedHeaders(allowHeaders);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
@@ -91,5 +101,13 @@ public class SecurityConfig {
     @Autowired
     public void setJwtTokenFilter(JwtTokenFilter jwtTokenFilter) {
         this.jwtTokenFilter = jwtTokenFilter;
+    }
+
+    /**
+     * Setter.
+     */
+    @Autowired
+    public void setConfigRepository(ConfigRepository configRepository) {
+        this.configRepository = configRepository;
     }
 }
