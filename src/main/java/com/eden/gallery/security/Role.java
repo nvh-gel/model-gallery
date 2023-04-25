@@ -1,12 +1,16 @@
 package com.eden.gallery.security;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
 /**
  * Enum for user roles.
  */
 @SuppressWarnings("unused")
-public enum Role {
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public class Role {
 
-    ROLE_USER,
-    ROLE_MODERATOR,
-    ROLE_ADMIN,
+    public static final String ROLE_USER = "USER";
+    public static final String ROLE_MODERATOR = "MODERATOR";
+    public static final String ROLE_ADMIN = "ADMIN";
 }
