@@ -3,7 +3,7 @@ package com.eden.gallery.service.impl;
 import com.eden.gallery.mapper.NicknameMapper;
 import com.eden.gallery.model.Nickname;
 import com.eden.gallery.producer.NicknameProducer;
-import com.eden.gallery.repository.NicknameRepository;
+import com.eden.gallery.repository.sql.NicknameRepository;
 import com.eden.gallery.service.NicknameService;
 import com.eden.gallery.viewmodel.NicknameVM;
 import com.eden.queue.util.Action;

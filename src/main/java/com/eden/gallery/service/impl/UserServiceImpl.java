@@ -2,7 +2,7 @@ package com.eden.gallery.service.impl;
 
 import com.eden.gallery.mapper.UserMapper;
 import com.eden.gallery.producer.UserProducer;
-import com.eden.gallery.repository.UserRepository;
+import com.eden.gallery.repository.sql.UserRepository;
 import com.eden.gallery.service.UserService;
 import com.eden.gallery.viewmodel.AuthorityVM;
 import com.eden.gallery.viewmodel.UserVM;

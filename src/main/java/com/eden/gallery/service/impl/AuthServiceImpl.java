@@ -1,6 +1,6 @@
 package com.eden.gallery.service.impl;
 
-import com.eden.gallery.repository.UserRepository;
+import com.eden.gallery.repository.sql.UserRepository;
 import com.eden.gallery.security.JwtTokenUtils;
 import com.eden.gallery.service.AuthService;
 import com.eden.gallery.viewmodel.AuthRequest;

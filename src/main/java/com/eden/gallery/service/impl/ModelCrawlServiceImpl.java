@@ -2,7 +2,7 @@ package com.eden.gallery.service.impl;
 
 import com.eden.gallery.mapper.ModelDataMapper;
 import com.eden.gallery.model.ModelData;
-import com.eden.gallery.repository.ModelDataRepository;
+import com.eden.gallery.repository.mongo.ModelDataRepository;
 import com.eden.gallery.service.ModelCrawlService;
 import com.eden.gallery.viewmodel.ModelDataVM;
 import org.bson.types.ObjectId;

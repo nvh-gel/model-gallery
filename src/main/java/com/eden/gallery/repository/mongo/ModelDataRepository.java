@@ -1,4 +1,4 @@
-package com.eden.gallery.repository;
+package com.eden.gallery.repository.mongo;
 
 import com.eden.gallery.model.ModelData;
 import org.bson.types.ObjectId;
