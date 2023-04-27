@@ -5,7 +5,7 @@ import com.eden.common.utils.SearchRequest;
 import com.eden.gallery.mapper.ModelMapper;
 import com.eden.gallery.model.Model;
 import com.eden.gallery.producer.ModelProducer;
-import com.eden.gallery.repository.ModelRepository;
+import com.eden.gallery.repository.sql.ModelRepository;
 import com.eden.gallery.search.SpecificationBuilder;
 import com.eden.gallery.search.impl.ModelSpecificationBuilder;
 import com.eden.gallery.service.ModelService;

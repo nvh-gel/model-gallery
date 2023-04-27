@@ -27,6 +27,11 @@ jar {
     enabled = false
 }
 
+javadoc {
+    source = sourceSets.main.allJava
+    classpath = configurations.compileClasspath
+}
+
 springBoot {
     buildInfo()
 }
@@ -37,7 +42,7 @@ jib {
     }
     to {
         image = 'nvhien2703/model-gallery'
-        tags = [version, 'latest']
+        tags = [version, 'latest'] as List<String>
         auth {
             username = System.getenv('DOCKER_USERNAME')
             password = System.getenv('DOCKER_PASSWORD')
@@ -50,7 +55,7 @@ jib {
                 'VERSION'         : version,
                 'APPLICATION_PORT': '8080',
                 'DEVELOPMENT_MODE': 'false'
-        ]
+        ] as Map<String, String>
     }
 }
 
@@ -72,13 +77,16 @@ repositories {
 dependencies {
     implementation "com.eden:common-libs:${versions.common}"
     implementation "com.eden:common-data:${versions.common}"
+    implementation "com.eden:common-nosql:${versions.common}"
     implementation "com.eden:common-queue:${versions.common}"
+    implementation "com.eden:common-mapper:${versions.common}"
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation "org.mapstruct:mapstruct:${versions.mapstruct}"
     implementation 'org.springframework.kafka:spring-kafka'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation "io.jsonwebtoken:jjwt-api:${versions.jjwt}"
+    implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
 
     compileOnly 'org.projectlombok:lombok'
 

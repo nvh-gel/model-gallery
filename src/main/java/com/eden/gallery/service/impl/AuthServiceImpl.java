@@ -1,6 +1,6 @@
 package com.eden.gallery.service.impl;
 
-import com.eden.gallery.repository.UserRepository;
+import com.eden.gallery.repository.sql.UserRepository;
 import com.eden.gallery.security.JwtTokenUtils;
 import com.eden.gallery.service.AuthService;
 import com.eden.gallery.viewmodel.AuthRequest;
@@ -13,6 +13,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
+import java.util.Base64;
 import java.util.Optional;
 
 /**
@@ -31,11 +32,12 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public AuthResponse login(AuthRequest request) {
 
+        String password = new String(Base64.getDecoder().decode(request.getPassword()));
         Authentication authentication = authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(
                         request.getUsername(),
-                        request.getPassword())
-                );
+                        password
+                ));
         User user = (User) authentication.getPrincipal();
         Optional<com.eden.gallery.model.User> userDetails = userRepository.findByUsername(user.getUsername());
         if (userDetails.isEmpty()) {

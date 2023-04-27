@@ -41,6 +41,10 @@ spring:
       token:
         expire: 86400000
         secret: fWVI7z4dDN6bWG5XNPH7jqPRjWbvbD5n
+  data:
+    mongodb:
+      uri: ${MONGO_URI}
+      database: gallery
 logging:
   level:
     root: info

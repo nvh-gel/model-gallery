@@ -12,5 +12,4 @@ class ModelGalleryApplicationTests {
 
         Assertions.assertTrue(true);
     }
-
 }

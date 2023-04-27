@@ -1,4 +1,4 @@
-package com.eden.gallery.repository;
+package com.eden.gallery.repository.sql;
 
 import com.eden.gallery.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
