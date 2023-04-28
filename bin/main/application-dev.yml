@@ -1,8 +1,0 @@
-spring:
-  jpa:
-    hibernate:
-      ddl-auto: update
-  kafka:
-    consumer:
-      properties:
-        auto-start: true
