@@ -92,6 +92,7 @@ fabric.properties
 
 ### Java ###
 # Compiled class file
+bin
 *.class
 
 # Log file
@@ -142,5 +143,7 @@ gradle-app.setting
 ### Gradle Patch ###
 # Java heap dump
 *.hprof
+
+.jpb
 
 # End of https://www.toptal.com/developers/gitignore/api/java,intellij+all,gradle
