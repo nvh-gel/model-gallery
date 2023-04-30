@@ -58,7 +58,7 @@ public class ModelSpecificationBuilder extends SpecificationBuilder<Model> {
         Specification<Model> nameLike = (model, cq, cb) ->
                 cb.like(cb.lower(model.get("name")), LIKE_PATTERN.formatted(trimmed));
         Specification<Model> localNameLike = (model, cq, cb) ->
-                cb.like(cb.lower(model.get("localName")), LIKE_PATTERN.formatted(trimmed));
+                cb.like(cb.lower(model.get("nativeName")), LIKE_PATTERN.formatted(trimmed));
         Specification<Model> nickNameLike = (model, cq, cb) -> {
             Join<Model, Nickname> modelNickname = model.join("nicknames", JoinType.LEFT);
             return cb.like(cb.lower(modelNickname.get("nick")), LIKE_PATTERN.formatted(trimmed));

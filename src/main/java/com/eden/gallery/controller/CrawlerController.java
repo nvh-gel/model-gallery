@@ -4,6 +4,7 @@ import com.eden.common.utils.ResponseModel;
 import com.eden.gallery.service.ModelCrawlService;
 import com.eden.gallery.utils.PageConverter;
 import com.eden.gallery.viewmodel.ModelDataVM;
+import com.eden.gallery.viewmodel.ModelVM;
 import jakarta.annotation.security.RolesAllowed;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -89,8 +90,8 @@ public class CrawlerController {
      * @param request model data
      * @return creation result
      */
-    @PostMapping("/model")
-    public ResponseModel moveModel(@RequestBody ModelDataVM request) {
+    @PostMapping("/model/move")
+    public ResponseModel moveModel(@RequestBody ModelVM request) {
 
         return ResponseModel.created(modelCrawlService.moveModelData(request));
     }

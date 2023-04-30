@@ -4,7 +4,10 @@ import com.eden.gallery.mapper.ModelDataMapper;
 import com.eden.gallery.model.ModelData;
 import com.eden.gallery.repository.mongo.ModelDataRepository;
 import com.eden.gallery.service.ModelCrawlService;
+import com.eden.gallery.service.ModelService;
 import com.eden.gallery.viewmodel.ModelDataVM;
+import com.eden.gallery.viewmodel.ModelVM;
+import jakarta.persistence.EntityExistsException;
 import org.bson.types.ObjectId;
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +30,7 @@ import java.util.UUID;
 public class ModelCrawlServiceImpl implements ModelCrawlService {
 
     private ModelDataRepository modelDataRepository;
+    private ModelService modelService;
 
     private final ModelDataMapper modelDataMapper = Mappers.getMapper(ModelDataMapper.class);
 
@@ -154,20 +158,23 @@ public class ModelCrawlServiceImpl implements ModelCrawlService {
      */
     @Override
     @Transactional
-    public String moveModelData(ModelDataVM request) {
+    public String moveModelData(ModelVM request) {
 
         if (!ObjectId.isValid(request.getObjectId())) {
-            return null;
+            throw new IllegalArgumentException("Invalid model object id");
         }
         ModelData existing = modelDataRepository.findById(new ObjectId(request.getObjectId())).orElse(null);
         if (existing == null) {
-            return null;
+            throw new EntityExistsException("No model data exist with id: " + request.getObjectId());
         }
+
+        String transactionId = modelService.createOnQueue(request);
+
         existing.setMoved(true);
         existing.setUpdatedAt(LocalDateTime.now());
         modelDataRepository.save(existing);
 
-        return "Need implement creating model on postgresql";
+        return transactionId;
     }
 
     /**
@@ -186,5 +193,15 @@ public class ModelCrawlServiceImpl implements ModelCrawlService {
     @Autowired
     public void setModelDataRepository(ModelDataRepository modelDataRepository) {
         this.modelDataRepository = modelDataRepository;
+    }
+
+    /**
+     * Setter.
+     *
+     * @param modelService model service bean
+     */
+    @Autowired
+    public void setModelService(ModelService modelService) {
+        this.modelService = modelService;
     }
 }

@@ -17,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -129,6 +130,22 @@ public class NicknameServiceImpl implements NicknameService {
         NicknameVM nicknameVM = new NicknameVM();
         nicknameVM.setId(id);
         return nicknameProducer.sendMessageToQueue(Action.DELETE, nicknameVM);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Transactional(Transactional.TxType.SUPPORTS)
+    public List<NicknameVM> create(List<NicknameVM> nicknameVMS) {
+
+        List<Nickname> toCreate = nicknameMapper.toModel(nicknameVMS);
+        toCreate.forEach(n -> {
+            n.setUuid(UUID.randomUUID());
+            n.setCreatedAt(LocalDateTime.now());
+            n.setUpdatedAt(LocalDateTime.now());
+        });
+        return nicknameMapper.toViewModel(nicknameRepository.saveAll(toCreate));
     }
 
     /**
