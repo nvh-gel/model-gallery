@@ -12,5 +12,6 @@ import lombok.EqualsAndHashCode;
 public class NicknameVM extends BaseVM {
 
     private String nick;
+    private String url;
     private Long modelId;
 }
