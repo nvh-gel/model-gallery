@@ -42,5 +42,5 @@ public interface ModelCrawlService extends BaseService<ModelDataVM> {
      * @param objectId mongo model data id
      * @return update result
      */
-    String linkModel(Integer modelId, String objectId);
+    String linkModel(Long modelId, String objectId);
 }
