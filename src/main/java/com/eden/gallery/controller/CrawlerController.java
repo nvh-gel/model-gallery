@@ -104,7 +104,7 @@ public class CrawlerController {
      * @return update result
      */
     @PostMapping("/model/link")
-    public ResponseModel linkModel(@RequestParam("modelId") Integer modelId,
+    public ResponseModel linkModel(@RequestParam("modelId") Long modelId,
                                    @RequestParam("objectId") String objectId) {
 
         return ResponseModel.updated(modelCrawlService.linkModel(modelId, objectId));
