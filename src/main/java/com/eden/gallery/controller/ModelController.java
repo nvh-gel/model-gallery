@@ -39,7 +39,6 @@ public class ModelController {
     @RolesAllowed({ROLE_ADMIN, ROLE_MODERATOR})
     @PostMapping
     public ResponseModel createModel(@RequestBody ModelVM request) {
-
         return ResponseModel.created(modelService.createOnQueue(request));
     }
 
@@ -50,7 +49,6 @@ public class ModelController {
      */
     @GetMapping
     public ResponseModel getModels() {
-
         return pageConverter.toResponseFromIterable(modelService.findAll(1, 10));
     }
 
@@ -63,7 +61,6 @@ public class ModelController {
      */
     @GetMapping("/{page}/{size}")
     public ResponseModel getModelsByPage(@PathVariable Integer page, @PathVariable Integer size) {
-
         return pageConverter.toResponseFromIterable(modelService.findAll(page, size));
     }
 
@@ -75,7 +72,6 @@ public class ModelController {
      */
     @GetMapping("/{id}")
     public ResponseModel getModelById(@PathVariable Long id) {
-
         return ResponseModel.ok(modelService.findById(id));
     }
 
@@ -88,7 +84,6 @@ public class ModelController {
     @RolesAllowed({ROLE_ADMIN, ROLE_MODERATOR})
     @PutMapping
     public ResponseModel updateModel(@RequestBody ModelVM request) {
-
         return ResponseModel.updated(modelService.updateOnQueue(request));
     }
 
@@ -101,7 +96,6 @@ public class ModelController {
     @RolesAllowed({ROLE_ADMIN, ROLE_MODERATOR})
     @DeleteMapping("/{id}")
     public ResponseModel deleteModel(@PathVariable Long id) {
-
         return ResponseModel.deleted(modelService.deleteOnQueue(id));
     }
 
@@ -112,9 +106,8 @@ public class ModelController {
      * @return response of found models matched the criteria
      */
     @RolesAllowed({ROLE_ADMIN, ROLE_MODERATOR})
-    @GetMapping("/search")
+    @PostMapping("/search")
     public ResponseModel searchModel(@RequestBody SearchRequest<ModelCriteria> request) {
-
         return pageConverter.toResponseFromPaging(modelService.searchModel(request));
     }
 

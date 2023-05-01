@@ -8,8 +8,9 @@ import com.eden.gallery.service.NicknameService;
 import com.eden.gallery.viewmodel.NicknameVM;
 import com.eden.queue.util.Action;
 import jakarta.transaction.Transactional;
+import lombok.AllArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.mapstruct.factory.Mappers;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -24,10 +25,12 @@ import java.util.UUID;
  * Implementation for nickname service.
  */
 @Service
+@Log4j2
+@AllArgsConstructor
 public class NicknameServiceImpl implements NicknameService {
 
-    private NicknameRepository nicknameRepository;
     private final NicknameMapper nicknameMapper = Mappers.getMapper(NicknameMapper.class);
+    private NicknameRepository nicknameRepository;
     private NicknameProducer nicknameProducer;
 
     /**
@@ -36,7 +39,14 @@ public class NicknameServiceImpl implements NicknameService {
     @Override
     @Transactional(Transactional.TxType.REQUIRED)
     public NicknameVM create(NicknameVM nicknameVM) {
-
+        boolean existing = nicknameRepository.existsByNickAndUrlAndModelId(
+                nicknameVM.getNick(),
+                nicknameVM.getUrl(),
+                nicknameVM.getModelId());
+        if (existing) {
+            log.info("Already exist nick name: {}", nicknameVM.getNick());
+            return null;
+        }
         Nickname toCreate = nicknameMapper.toModel(nicknameVM);
         toCreate.setUuid(UUID.randomUUID());
         toCreate.setCreatedAt(LocalDateTime.now());
@@ -50,7 +60,6 @@ public class NicknameServiceImpl implements NicknameService {
      */
     @Override
     public String createOnQueue(NicknameVM nicknameVM) {
-
         return nicknameProducer.sendMessageToQueue(Action.CREATE, nicknameVM);
     }
 
@@ -59,7 +68,6 @@ public class NicknameServiceImpl implements NicknameService {
      */
     @Override
     public Page<NicknameVM> findAll(int page, int size) {
-
         Pageable pageable = PageRequest.of(page > 0 ? page - 1 : 0, size);
         Page<Nickname> nicknames = nicknameRepository.findAll(pageable);
         return new PageImpl<>(
@@ -74,7 +82,6 @@ public class NicknameServiceImpl implements NicknameService {
      */
     @Override
     public NicknameVM findById(Long id) {
-
         return nicknameMapper.toViewModel(nicknameRepository.findById(id).orElse(null));
     }
 
@@ -84,7 +91,6 @@ public class NicknameServiceImpl implements NicknameService {
     @Override
     @Transactional(Transactional.TxType.REQUIRED)
     public NicknameVM update(NicknameVM nicknameVM) {
-
         Nickname exist = nicknameRepository.findById(nicknameVM.getId()).orElse(null);
         if (null == exist) {
             return null;
@@ -101,7 +107,6 @@ public class NicknameServiceImpl implements NicknameService {
      */
     @Override
     public String updateOnQueue(NicknameVM nicknameVM) {
-
         return nicknameProducer.sendMessageToQueue(Action.UPDATE, nicknameVM);
     }
 
@@ -111,7 +116,6 @@ public class NicknameServiceImpl implements NicknameService {
     @Override
     @Transactional(Transactional.TxType.REQUIRED)
     public NicknameVM delete(Long id) {
-
         Nickname exist = nicknameRepository.findById(id).orElse(null);
         if (null == exist) {
             return null;
@@ -138,7 +142,6 @@ public class NicknameServiceImpl implements NicknameService {
     @Override
     @Transactional(Transactional.TxType.SUPPORTS)
     public List<NicknameVM> create(List<NicknameVM> nicknameVMS) {
-
         List<Nickname> toCreate = nicknameMapper.toModel(nicknameVMS);
         toCreate.forEach(n -> {
             n.setUuid(UUID.randomUUID());
@@ -146,21 +149,5 @@ public class NicknameServiceImpl implements NicknameService {
             n.setUpdatedAt(LocalDateTime.now());
         });
         return nicknameMapper.toViewModel(nicknameRepository.saveAll(toCreate));
-    }
-
-    /**
-     * Setter.
-     */
-    @Autowired
-    public void setNicknameRepository(NicknameRepository nicknameRepository) {
-        this.nicknameRepository = nicknameRepository;
-    }
-
-    /**
-     * Setter.
-     */
-    @Autowired
-    public void setNicknameProducer(NicknameProducer nicknameProducer) {
-        this.nicknameProducer = nicknameProducer;
     }
 }
