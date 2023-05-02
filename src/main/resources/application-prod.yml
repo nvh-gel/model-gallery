@@ -2,5 +2,7 @@ spring:
   jpa:
     hibernate:
       ddl-auto: none
-  devtools:
-    add-properties: false
+  kafka:
+    consumer:
+      properties:
+        auto-start: true

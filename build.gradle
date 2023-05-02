@@ -3,11 +3,19 @@ plugins {
     id 'org.springframework.boot' version '3.0.5'
     id 'io.spring.dependency-management' version '1.1.0'
     id 'com.google.cloud.tools.jib' version '3.3.1'
+    id 'jacoco'
 }
 
 group = 'com.eden'
-version = '0.0.1'
 sourceCompatibility = '17'
+
+file("versions.properties").withReader {
+    Properties props = new Properties()
+    props.load(it)
+    project.ext.versions = props
+}
+
+version = versions.version
 
 configurations {
     compileOnly {
@@ -19,13 +27,22 @@ jar {
     enabled = false
 }
 
+javadoc {
+    source = sourceSets.main.allJava
+    classpath = configurations.compileClasspath
+}
+
+springBoot {
+    buildInfo()
+}
+
 jib {
     from {
-        image = 'openjdk:17-slim'
+        image = 'ibm-semeru-runtimes:open-17-jre'
     }
     to {
         image = 'nvhien2703/model-gallery'
-        tags = [version, 'latest']
+        tags = [version, 'latest'] as List<String>
         auth {
             username = System.getenv('DOCKER_USERNAME')
             password = System.getenv('DOCKER_PASSWORD')
@@ -35,17 +52,15 @@ jib {
         mainClass = "${group}.gallery.ModelGalleryApplication"
         ports = ['8080']
         environment = [
-                'VERSION': version,
+                'VERSION'         : version,
                 'APPLICATION_PORT': '8080',
                 'DEVELOPMENT_MODE': 'false'
-        ]
+        ] as Map<String, String>
     }
 }
 
-file("versions.properties").withReader {
-    Properties props = new Properties()
-    props.load(it)
-    project.ext.versions = props
+jacoco {
+    toolVersion = versions.jacoco
 }
 
 repositories {
@@ -62,27 +77,64 @@ repositories {
 dependencies {
     implementation "com.eden:common-libs:${versions.common}"
     implementation "com.eden:common-data:${versions.common}"
-    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation "com.eden:common-nosql:${versions.common}"
+    implementation "com.eden:common-queue:${versions.common}"
+    implementation "com.eden:common-mapper:${versions.common}"
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.kafka:spring-kafka'
     implementation "org.mapstruct:mapstruct:${versions.mapstruct}"
+    implementation 'org.springframework.kafka:spring-kafka'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation "io.jsonwebtoken:jjwt-api:${versions.jjwt}"
+    implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
 
     compileOnly 'org.projectlombok:lombok'
 
-    developmentOnly 'org.springframework.boot:spring-boot-devtools'
-
-    runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
     runtimeOnly 'org.postgresql:postgresql'
+    runtimeOnly "io.jsonwebtoken:jjwt-impl:${versions.jjwt}"
+    runtimeOnly "io.jsonwebtoken:jjwt-jackson:${versions.jjwt}"
 
     annotationProcessor 'org.projectlombok:lombok'
     annotationProcessor "org.mapstruct:mapstruct-processor:${versions.mapstruct}"
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation 'org.springframework.kafka:spring-kafka-test'
     testImplementation 'com.h2database:h2'
+    testImplementation 'org.springframework.kafka:spring-kafka-test'
+    testImplementation 'org.springframework.security:spring-security-test'
 }
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+test {
+    finalizedBy jacocoTestCoverageVerification, jacocoTestReport
+    jacoco {
+        excludes = [
+                'com.eden.gallery.mapper.*Impl',
+                'com.eden.gallery.ModelGalleryApplication',
+        ]
+    }
+}
+
+jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            limit {
+                minimum = 0.1
+            }
+        }
+    }
+}
+
+jacocoTestReport {
+    dependsOn test
+    afterEvaluate {
+        getClassDirectories().setFrom(classDirectories.files.collect {
+            fileTree(dir: it, exclude: [
+                    '**/com/eden/gallery/mapper/*Impl.class',
+                    '**/com/eden/gallery/ModelGalleryApplication.class',
+            ])
+        })
+    }
 }

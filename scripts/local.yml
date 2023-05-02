@@ -23,12 +23,12 @@ spec:
             - name: ENV
               value: local
             - name: DB_DATABASE
-              value: indiukin
+              value: gallery_2hrr
             - name: DB_USERNAME
-              value: indiukin
+              value: apidev
             - name: DB_HOST
-              value: john.db.elephantsql.com
+              value: dpg-cgtltsiut4mcfrmcqcq0-a.singapore-postgres.render.com
             - name: DB_PASSWORD
-              value: b2FqcDQSH7WG5df8-I0WY1_CZHXEzEJp
+              value: 0BsiZ7zZ01ogH6dpNDEpadCtV6U6Q03W
           securityContext:
             privileged: false
