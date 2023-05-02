@@ -22,3 +22,6 @@ CREATE TABLE model (
 	waist int4 NULL,
 	CONSTRAINT model_pkey PRIMARY KEY (id)
 );
+
+CREATE INDEX model_name_idx ON model USING btree (name);
+CREATE INDEX model_native_name_idx ON model USING btree (native_name);

@@ -16,3 +16,5 @@ CREATE TABLE nickname (
 	CONSTRAINT nickname_pkey PRIMARY KEY (id),
 	CONSTRAINT fk_nickname_model FOREIGN KEY (model_id) REFERENCES model(id)
 );
+
+CREATE INDEX nickname_nick_idx ON nickname (nick);
