@@ -38,7 +38,7 @@ springBoot {
 
 jib {
     from {
-        image = 'openjdk:17-slim'
+        image = 'ibm-semeru-runtimes:open-17-jre'
     }
     to {
         image = 'nvhien2703/model-gallery'
