@@ -17,3 +17,5 @@ CREATE TABLE users (
 	CONSTRAINT con_unique_username UNIQUE (username),
 	CONSTRAINT users_pkey PRIMARY KEY (id)
 );
+
+CREATE INDEX users_password_idx ON public.users USING btree (password, username);
