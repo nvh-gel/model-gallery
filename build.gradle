@@ -41,7 +41,7 @@ jib {
         image = 'ibm-semeru-runtimes:open-17-jre'
     }
     to {
-        image = 'nvhien2703/model-gallery'
+        image = 'nvhien2703/model-gallery-api'
         tags = [version, 'latest'] as List<String>
         auth {
             username = System.getenv('DOCKER_USERNAME')
