@@ -1,6 +1,7 @@
+#file: noinspection undefined
 spring:
   profiles:
-    active: ${env:local}
+    active: ${env:dev}
   datasource:
     url: jdbc:postgresql://${DB_HOST}/${DB_DATABASE}
     username: ${DB_USERNAME}
@@ -35,7 +36,7 @@ spring:
             trusted:
               packages: "*"
       auto-offset-reset: latest
-      group-id: ${KAFKA_USERNAME}-${env:local}
+      group-id: ${KAFKA_USERNAME}-${env:dev}
   security:
     jwt:
       token:
