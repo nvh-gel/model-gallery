@@ -2,6 +2,7 @@ package com.eden.gallery.service;
 
 import com.eden.common.service.BaseService;
 import com.eden.gallery.viewmodel.ModelDataVM;
+import com.eden.gallery.viewmodel.ModelVM;
 
 import java.util.List;
 
@@ -29,10 +30,10 @@ public interface ModelCrawlService extends BaseService<ModelDataVM> {
     /**
      * Convert a crawled model to model entity.
      *
-     * @param request request model data
+     * @param request request model
      * @return creation result
      */
-    String moveModelData(ModelDataVM request);
+    String moveModelData(ModelVM request);
 
     /**
      * Link an existing model entity with model data record.
@@ -41,5 +42,5 @@ public interface ModelCrawlService extends BaseService<ModelDataVM> {
      * @param objectId mongo model data id
      * @return update result
      */
-    String linkModel(Integer modelId, String objectId);
+    String linkModel(Long modelId, String objectId);
 }

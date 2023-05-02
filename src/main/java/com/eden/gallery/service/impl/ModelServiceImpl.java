@@ -9,16 +9,23 @@ import com.eden.gallery.repository.sql.ModelRepository;
 import com.eden.gallery.search.SpecificationBuilder;
 import com.eden.gallery.search.impl.ModelSpecificationBuilder;
 import com.eden.gallery.service.ModelService;
+import com.eden.gallery.service.NicknameService;
 import com.eden.gallery.utils.ModelCriteria;
 import com.eden.gallery.viewmodel.ModelVM;
+import com.eden.gallery.viewmodel.NicknameVM;
 import com.eden.queue.util.Action;
 import jakarta.transaction.Transactional;
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -30,6 +37,7 @@ public class ModelServiceImpl implements ModelService {
     private ModelRepository modelRepository;
     private final ModelMapper modelMapper = Mappers.getMapper(ModelMapper.class);
     private ModelProducer modelProducer;
+    private NicknameService nicknameService;
 
     /**
      * {@inheritDoc}
@@ -43,7 +51,13 @@ public class ModelServiceImpl implements ModelService {
         toCreate.setCreatedAt(LocalDateTime.now());
         toCreate.setUpdatedAt(LocalDateTime.now());
         Model created = modelRepository.save(toCreate);
-        return modelMapper.toViewModel(created);
+        ModelVM createdVM = modelMapper.toViewModel(created);
+
+        modelVM.getNicknames().forEach(n -> n.setModelId(created.getId()));
+        List<NicknameVM> createdNickname = nicknameService.create(modelVM.getNicknames());
+        createdVM.setNicknames(createdNickname);
+
+        return createdVM;
     }
 
     /**
@@ -171,5 +185,15 @@ public class ModelServiceImpl implements ModelService {
     @Autowired
     public void setModelProducer(ModelProducer modelProducer) {
         this.modelProducer = modelProducer;
+    }
+
+    /**
+     * Setter.
+     *
+     * @param nicknameService nickname service bean
+     */
+    @Autowired
+    public void setNicknameService(NicknameService nicknameService) {
+        this.nicknameService = nicknameService;
     }
 }

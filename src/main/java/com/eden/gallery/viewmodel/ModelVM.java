@@ -15,11 +15,15 @@ import java.util.List;
 public class ModelVM extends BaseVM {
 
     private String name;
-    private String localName;
-    private Integer yearOfBirth;
-    private LocalDate dateOfBirth;
-    private String thumbnail;
+    private String nativeName;
     private String url;
+    private String thumbnail;
+    private LocalDate dateOfBirth;
+    private Integer yearOfBirth;
+    private Integer boob;
+    private Integer waist;
+    private Integer hip;
+    private String description;
 
     private List<NicknameVM> nicknames;
 }
