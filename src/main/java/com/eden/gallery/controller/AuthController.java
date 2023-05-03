@@ -3,7 +3,7 @@ package com.eden.gallery.controller;
 import com.eden.common.utils.ResponseModel;
 import com.eden.gallery.service.AuthService;
 import com.eden.gallery.viewmodel.AuthRequest;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/auth")
+@AllArgsConstructor
 public class AuthController {
 
     private AuthService authService;
@@ -33,13 +34,5 @@ public class AuthController {
         } catch (BadCredentialsException ex) {
             return ResponseModel.unauthorized();
         }
-    }
-
-    /**
-     * Setter.
-     */
-    @Autowired
-    public void setAuthService(AuthService authService) {
-        this.authService = authService;
     }
 }
