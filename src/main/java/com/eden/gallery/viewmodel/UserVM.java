@@ -17,5 +17,8 @@ public class UserVM extends BaseVM {
     private String password;
     private Boolean enabled;
     private String email;
+    private Boolean expired;
+    private Boolean locked;
+    private Boolean credentialExpired;
     private List<AuthorityVM> authorities;
 }

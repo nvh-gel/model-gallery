@@ -5,18 +5,17 @@ import com.eden.gallery.viewmodel.ModelDataVM;
 import com.eden.mapper.BaseDocMapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingConstants;
 import org.mapstruct.NullValueMappingStrategy;
 import org.mapstruct.NullValuePropertyMappingStrategy;
-
-import static com.eden.gallery.utils.Strings.SPRING;
 
 /**
  * Data mapper for crawled model.
  */
-@Mapper(componentModel = SPRING,
+@Mapper(componentModel = MappingConstants.ComponentModel.SPRING,
         nullValueMappingStrategy = NullValueMappingStrategy.RETURN_NULL,
         nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-public interface ModelDataMapper extends BaseDocMapper<ModelData, ModelDataVM> {
+public interface ModelDataMapper extends BaseDocMapper<ModelDataVM, ModelData> {
 
     /**
      * {@inheritDoc}

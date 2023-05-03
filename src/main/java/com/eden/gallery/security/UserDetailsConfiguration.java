@@ -1,6 +1,6 @@
 package com.eden.gallery.security;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -13,6 +13,7 @@ import javax.sql.DataSource;
  * Configuration for user verification.
  */
 @Configuration
+@AllArgsConstructor
 public class UserDetailsConfiguration {
 
     private DataSource dataSource;
@@ -24,8 +25,7 @@ public class UserDetailsConfiguration {
      */
     @Bean
     public UserDetailsManager userDetailsManager() {
-
-        return new JdbcUserDetailsManager(dataSource);
+        return new JdbcUserDetailsManager(this.dataSource);
     }
 
     /**
@@ -36,13 +36,5 @@ public class UserDetailsConfiguration {
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
-    }
-
-    /**
-     * Setter.
-     */
-    @Autowired
-    public void setDataSource(DataSource dataSource) {
-        this.dataSource = dataSource;
     }
 }
