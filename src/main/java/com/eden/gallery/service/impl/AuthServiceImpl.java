@@ -1,20 +1,22 @@
 package com.eden.gallery.service.impl;
 
-import com.eden.gallery.repository.sql.UserRepository;
+import com.eden.gallery.model.Role;
+import com.eden.gallery.repository.sql.RoleRepository;
 import com.eden.gallery.security.JwtTokenUtils;
 import com.eden.gallery.service.AuthService;
 import com.eden.gallery.viewmodel.AuthRequest;
 import com.eden.gallery.viewmodel.AuthResponse;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.eden.gallery.viewmodel.AuthorityVM;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
 import java.util.Base64;
-import java.util.Optional;
+import java.util.List;
 
 /**
  * Implementation for authentication service.
@@ -22,16 +24,23 @@ import java.util.Optional;
 @Service
 public class AuthServiceImpl implements AuthService {
 
-    private AuthenticationManager authenticationManager;
-    private JwtTokenUtils jwtTokenUtils;
-    private UserRepository userRepository;
+    private final AuthenticationManager authenticationManager;
+    private final JwtTokenUtils jwtTokenUtils;
+    private final List<Role> roles;
+
+    public AuthServiceImpl(AuthenticationConfiguration authenticationConfiguration,
+                           JwtTokenUtils jwtTokenUtils,
+                           RoleRepository roleRepository) throws Exception {
+        this.authenticationManager = authenticationConfiguration.getAuthenticationManager();
+        this.jwtTokenUtils = jwtTokenUtils;
+        roles = roleRepository.findAllByOrderByLevelDesc();
+    }
 
     /**
      * {@inheritDoc}
      */
     @Override
     public AuthResponse login(AuthRequest request) {
-
         String password = new String(Base64.getDecoder().decode(request.getPassword()));
         Authentication authentication = authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(
@@ -39,35 +48,12 @@ public class AuthServiceImpl implements AuthService {
                         password
                 ));
         User user = (User) authentication.getPrincipal();
-        Optional<com.eden.gallery.model.User> userDetails = userRepository.findByUsername(user.getUsername());
-        if (userDetails.isEmpty()) {
-            return null;
-        }
-        String token = jwtTokenUtils.generateAccessToken(userDetails.get());
-        return new AuthResponse(user.getUsername(), token);
-    }
-
-    /**
-     * Setter.
-     */
-    @Autowired
-    public void setJwtTokenUtils(JwtTokenUtils jwtTokenUtils) {
-        this.jwtTokenUtils = jwtTokenUtils;
-    }
-
-    /**
-     * Setter.
-     */
-    @Autowired
-    public void setAuthenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
-        this.authenticationManager = authenticationConfiguration.getAuthenticationManager();
-    }
-
-    /**
-     * Setter.
-     */
-    @Autowired
-    public void setUserRepository(UserRepository userRepository) {
-        this.userRepository = userRepository;
+        String token = jwtTokenUtils.generateAccessToken(user);
+        List<String> authorities = user.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
+        List<AuthorityVM> userAuthorities = roles.stream()
+                .filter(role -> authorities.contains(role.getName()))
+                .map(role -> new AuthorityVM(user.getUsername(), role.getName(), role.getDefaultUrl()))
+                .toList();
+        return new AuthResponse(user.getUsername(), token, userAuthorities);
     }
 }

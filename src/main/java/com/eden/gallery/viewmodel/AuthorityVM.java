@@ -1,16 +1,18 @@
 package com.eden.gallery.viewmodel;
 
-import com.eden.common.viewmodel.BaseVM;
+import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 /**
  * DTO for authority.
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
-public class AuthorityVM extends BaseVM {
+@NoArgsConstructor
+@AllArgsConstructor
+public class AuthorityVM {
 
     private String username;
     private String authority;
+    private String defaultUrl;
 }

@@ -1,25 +1,25 @@
 package com.eden.gallery.mapper;
 
 import com.eden.gallery.model.Authorities;
+import com.eden.gallery.model.Role;
 import com.eden.gallery.model.User;
 import com.eden.gallery.viewmodel.AuthorityVM;
 import com.eden.gallery.viewmodel.UserVM;
 import com.eden.mapper.BaseMapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingConstants;
 import org.mapstruct.Named;
 import org.mapstruct.NullValueMappingStrategy;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 
-import static com.eden.gallery.utils.Strings.SPRING;
-
 /**
  * Data mapper for user.
  */
-@Mapper(componentModel = SPRING,
+@Mapper(componentModel = MappingConstants.ComponentModel.SPRING,
         nullValueMappingStrategy = NullValueMappingStrategy.RETURN_NULL,
         nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-public interface UserMapper extends BaseMapper<User, UserVM> {
+public interface UserMapper extends BaseMapper<UserVM, User> {
 
     /**
      * {@inheritDoc}
@@ -34,8 +34,13 @@ public interface UserMapper extends BaseMapper<User, UserVM> {
      * @param authorityVM vm to convert
      * @return authority data
      */
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "uuid", ignore = true)
     @Mapping(target = "deleted", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "user", source = "username", qualifiedByName = "childAuthorityUsernameToUser")
+    @Mapping(target = "authority", source = "authority", qualifiedByName = "authorityStringToRole")
     Authorities toModel(AuthorityVM authorityVM);
 
     /**
@@ -45,7 +50,6 @@ public interface UserMapper extends BaseMapper<User, UserVM> {
      * @return authority VM
      */
     @Mapping(target = "username", source = "user", qualifiedByName = "childAuthorityUserToUsername")
-    @Mapping(target = "objectId", ignore = true)
     AuthorityVM toViewModel(Authorities authorities);
 
     /**
@@ -70,5 +74,12 @@ public interface UserMapper extends BaseMapper<User, UserVM> {
     @Named("childAuthorityUserToUsername")
     default String childAuthorityUserToUsername(User user) {
         return user.getUsername();
+    }
+
+    @Named("authorityStringToRole")
+    default Role authorityStringToRole(String authority) {
+        Role role = new Role();
+        role.setName(authority);
+        return role;
     }
 }
