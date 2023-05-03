@@ -8,9 +8,9 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,8 +22,8 @@ import java.util.List;
  */
 @Entity(name = "users")
 @Table(uniqueConstraints = {@UniqueConstraint(name = "con_unique_username", columnNames = "username")})
-@Data
-@EqualsAndHashCode(callSuper = true)
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Where(clause = "is_deleted=false")
@@ -35,22 +35,25 @@ public class User extends BaseModel implements UserDetails {
     private String password;
     private String email;
     private boolean enabled = true;
+    private boolean expired = false;
+    private boolean locked = false;
+    private boolean credentialExpired = false;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private List<Authorities> authorities;
 
     @Override
     public boolean isAccountNonExpired() {
-        return true;
+        return !expired;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return !locked;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return true;
+        return !credentialExpired;
     }
 }

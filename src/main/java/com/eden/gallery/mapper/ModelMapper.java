@@ -7,19 +7,18 @@ import com.eden.gallery.viewmodel.NicknameVM;
 import com.eden.mapper.BaseMapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingConstants;
 import org.mapstruct.Named;
 import org.mapstruct.NullValueMappingStrategy;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 
-import static com.eden.gallery.utils.Strings.SPRING;
-
 /**
  * Data mapper for model.
  */
-@Mapper(componentModel = SPRING,
+@Mapper(componentModel = MappingConstants.ComponentModel.SPRING,
         nullValueMappingStrategy = NullValueMappingStrategy.RETURN_NULL,
         nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-public interface ModelMapper extends BaseMapper<Model, ModelVM> {
+public interface ModelMapper extends BaseMapper<ModelVM, Model> {
 
     /**
      * {@inheritDoc}
