@@ -9,6 +9,8 @@ import com.eden.gallery.viewmodel.NicknameVM;
 import com.eden.queue.util.Action;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import org.mapstruct.factory.Mappers;
 import org.springframework.data.domain.Page;
@@ -26,7 +28,9 @@ import java.util.UUID;
  */
 @Service
 @Log4j2
+@NoArgsConstructor
 @AllArgsConstructor
+@Setter
 public class NicknameServiceImpl implements NicknameService {
 
     private final NicknameMapper nicknameMapper = Mappers.getMapper(NicknameMapper.class);

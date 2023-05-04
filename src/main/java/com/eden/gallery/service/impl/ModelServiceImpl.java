@@ -15,8 +15,10 @@ import com.eden.gallery.viewmodel.ModelVM;
 import com.eden.gallery.viewmodel.NicknameVM;
 import com.eden.queue.util.Action;
 import jakarta.transaction.Transactional;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.mapstruct.factory.Mappers;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -32,10 +34,13 @@ import java.util.UUID;
  * Implementation for model service.
  */
 @Service
+@NoArgsConstructor
+@AllArgsConstructor
+@Setter
 public class ModelServiceImpl implements ModelService {
 
-    private ModelRepository modelRepository;
     private final ModelMapper modelMapper = Mappers.getMapper(ModelMapper.class);
+    private ModelRepository modelRepository;
     private ModelProducer modelProducer;
     private NicknameService nicknameService;
 
@@ -169,31 +174,5 @@ public class ModelServiceImpl implements ModelService {
                 result.getPageable(),
                 result.getTotalElements()
         );
-    }
-
-    /**
-     * Setter.
-     */
-    @Autowired
-    public void setModelRepository(ModelRepository modelRepository) {
-        this.modelRepository = modelRepository;
-    }
-
-    /**
-     * Setter.
-     */
-    @Autowired
-    public void setModelProducer(ModelProducer modelProducer) {
-        this.modelProducer = modelProducer;
-    }
-
-    /**
-     * Setter.
-     *
-     * @param nicknameService nickname service bean
-     */
-    @Autowired
-    public void setNicknameService(NicknameService nicknameService) {
-        this.nicknameService = nicknameService;
     }
 }

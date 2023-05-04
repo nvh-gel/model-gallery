@@ -1,4 +1,4 @@
-#file: noinspection SpringBootApplicationYaml
+#file: noinspection undefined
 spring:
   datasource:
     url: jdbc:h2:~/test/test_db
@@ -19,3 +19,6 @@ spring:
     mongodb:
       uri: ${MONGO_URI}
       database: test
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
