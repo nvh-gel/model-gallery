@@ -27,5 +27,6 @@ jobs:
           REGISTRY_TOKEN: ${{secrets.REGISTRY_TOKEN}}
           DOCKER_USERNAME: ${{secrets.DOCKER_USERNAME}}
           DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
+          MONGO_URI: ${{secrets.MONGO_URI}}
         with:
           arguments: build
