@@ -29,4 +29,4 @@ jobs:
           DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
           MONGO_URI: ${{secrets.MONGO_URI}}
         with:
-          arguments: 'build --stacktrace'
+          arguments: 'test --stacktrace'
