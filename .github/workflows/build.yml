@@ -32,4 +32,4 @@ jobs:
           KAFKA_USERNAME: ${{secrets.KAFKA_USERNAME}}
           KAFKA_PASSWORD: ${{secrets.KAFKA_PASSWORD}}
         with:
-          arguments: 'test --stacktrace'
+          arguments: build
