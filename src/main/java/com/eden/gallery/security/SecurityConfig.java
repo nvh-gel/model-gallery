@@ -1,7 +1,7 @@
 package com.eden.gallery.security;
 
-import com.eden.gallery.repository.mongo.ConfigRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -15,8 +15,6 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -25,11 +23,16 @@ import java.util.List;
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity(securedEnabled = true, jsr250Enabled = true)
+@AllArgsConstructor
 public class SecurityConfig {
 
-    private ConfigRepository configRepository;
-
     private JwtTokenFilter jwtTokenFilter;
+    @Value("${spring.security.allowed.methods}")
+    private List<String> allowMethods;
+    @Value("${spring.security.allowed.headers}")
+    private List<String> allowHeaders;
+    @Value("${spring.security.allowed.origins}")
+    private List<String> allowOrigins;
 
     /**
      * Define filter chain.
@@ -40,7 +43,6 @@ public class SecurityConfig {
      */
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-
         http.csrf().disable();
         http.cors();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
@@ -65,17 +67,6 @@ public class SecurityConfig {
      */
     @Bean
     public CorsConfigurationSource configSource() {
-
-        List<String> allowOrigins = configRepository.findById("ALLOWED_ORIGINS")
-                .map(config -> Arrays.stream(config.getValue().split(",")).toList())
-                .orElseGet(Collections::emptyList);
-        List<String> allowMethods = configRepository.findById("ALLOWED_METHODS")
-                .map(config -> Arrays.stream(config.getValue().split(",")).toList())
-                .orElseGet(Collections::emptyList);
-        List<String> allowHeaders = configRepository.findById("ALLOWED_HEADERS")
-                .map(config -> Arrays.stream(config.getValue().split(",")).toList())
-                .orElseGet(Collections::emptyList);
-
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(allowOrigins);
         configuration.setAllowedMethods(allowMethods);
@@ -93,21 +84,5 @@ public class SecurityConfig {
     @Bean
     public CorsFilter corsFilter() {
         return new CorsFilter(configSource());
-    }
-
-    /**
-     * Setter.
-     */
-    @Autowired
-    public void setJwtTokenFilter(JwtTokenFilter jwtTokenFilter) {
-        this.jwtTokenFilter = jwtTokenFilter;
-    }
-
-    /**
-     * Setter.
-     */
-    @Autowired
-    public void setConfigRepository(ConfigRepository configRepository) {
-        this.configRepository = configRepository;
     }
 }

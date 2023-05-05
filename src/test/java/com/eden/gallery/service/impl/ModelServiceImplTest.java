@@ -83,6 +83,18 @@ class ModelServiceImplTest {
         assertEquals(2, result.getPageable().getPageNumber());
     }
 
+    @Test
+    void testDeleteNotFound() {
+        ModelVM result = modelService.delete(999L);
+        assertNull(result);
+    }
+
+    @Test
+    void testDeleteSuccess() {
+        ModelVM result = modelService.delete(1L);
+        assertNotNull(result);
+    }
+
     @TestConfiguration
     public static class ModelServiceConfiguration {
 
