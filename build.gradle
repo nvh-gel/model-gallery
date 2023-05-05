@@ -118,10 +118,18 @@ test {
 }
 
 jacocoTestCoverageVerification {
+    afterEvaluate {
+        getClassDirectories().setFrom(classDirectories.files.collect {
+            fileTree(dir: it, exclude: [
+                    '**/com/eden/gallery/mapper/*Impl.class',
+                    '**/com/eden/gallery/ModelGalleryApplication.class',
+            ])
+        })
+    }
     violationRules {
         rule {
             limit {
-                minimum = 0.15
+                minimum = 0.30
             }
         }
     }

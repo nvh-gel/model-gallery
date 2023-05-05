@@ -26,4 +26,5 @@ public class Role extends BaseModel implements Serializable {
     private String name;
     private String defaultUrl;
     private int level;
+    private String pages;
 }
