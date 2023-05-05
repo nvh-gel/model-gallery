@@ -12,6 +12,10 @@ spring:
         nick: ${KAFKA_USERNAME}-nick
         user: ${KAFKA_USERNAME}-user
   security:
+    allowed:
+      methods: ${ALLOWED_METHODS:""}
+      headers: ${ALLOWED_HEADERS:""}
+      origins: ${ALLOWED_ORIGINS:""}
     jwt:
       token:
         secret: l78mybysBXZHGbLNERzPNgrrXrtFqfLa
