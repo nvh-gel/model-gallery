@@ -1,10 +1,8 @@
-name: Build
+name: Publish
 
 on:
   push:
-    branches: [ "master", "staging", "dev" ]
-  pull_request:
-    branches: [ "master", "staging", "dev" ]
+    branches: [ "dev" ]
 
 permissions:
   contents: read
@@ -24,9 +22,11 @@ jobs:
         env:
           REGISTRY_USER: ${{secrets.REGISTRY_USER}}
           REGISTRY_TOKEN: ${{secrets.REGISTRY_TOKEN}}
+          DOCKER_USERNAME: ${{secrets.DOCKER_USERNAME}}
+          DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
           MONGO_URI: ${{secrets.MONGO_URI}}
           KAFKA_HOST: ${{secrets.KAFKA_HOST}}
           KAFKA_USERNAME: ${{secrets.KAFKA_USERNAME}}
           KAFKA_PASSWORD: ${{secrets.KAFKA_PASSWORD}}
         with:
-          arguments: build
+          arguments: 'build jib'
