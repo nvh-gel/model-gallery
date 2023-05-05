@@ -52,8 +52,16 @@ public class AuthServiceImpl implements AuthService {
         List<String> authorities = user.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
         List<AuthorityVM> userAuthorities = roles.stream()
                 .filter(role -> authorities.contains(role.getName()))
-                .map(role -> new AuthorityVM(user.getUsername(), role.getName(), role.getDefaultUrl()))
+                .map(role -> new AuthorityVM(
+                        user.getUsername(),
+                        role.getName(),
+                        role.getDefaultUrl(),
+                        role.getLevel(),
+                        role.getPages()
+                ))
                 .toList();
-        return new AuthResponse(user.getUsername(), token, userAuthorities);
+        Integer level = userAuthorities.stream().findFirst().map(AuthorityVM::getLevel).orElse(0);
+        String defaultUrl = userAuthorities.stream().findFirst().map(AuthorityVM::getDefaultUrl).orElse("/");
+        return new AuthResponse(user.getUsername(), token, level, defaultUrl, userAuthorities);
     }
 }

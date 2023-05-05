@@ -108,7 +108,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         User user = new User();
         user.setUsername(jwtSubjects[0]);
         List<Authorities> authorities = Arrays.stream(jwtSubjects[2].split(","))
-                .map(str -> new Authorities(new Role(str, null, 0), user))
+                .map(str -> new Authorities(new Role(str, null, 0, null), user))
                 .toList();
         user.setAuthorities(authorities);
         return user;

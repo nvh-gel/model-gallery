@@ -11,7 +11,6 @@ import com.eden.gallery.viewmodel.ModelVM;
 import com.eden.gallery.viewmodel.NicknameVM;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import org.bson.types.ObjectId;
@@ -33,7 +32,6 @@ import java.util.UUID;
  */
 @Service
 @Log4j2
-@NoArgsConstructor
 @AllArgsConstructor
 @Setter
 public class ModelCrawlServiceImpl implements ModelCrawlService {

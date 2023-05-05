@@ -59,7 +59,7 @@ class NicknameServiceImplTest {
     static class NicknameServiceTestContext {
         @Bean
         public NicknameService nicknameService() {
-            return new NicknameServiceImpl();
+            return new NicknameServiceImpl(null, null);
         }
     }
 }
