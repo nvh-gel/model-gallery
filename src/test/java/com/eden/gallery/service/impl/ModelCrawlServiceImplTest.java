@@ -133,7 +133,7 @@ class ModelCrawlServiceImplTest {
     static class ModelCrawlServiceImplTestContextConfig {
         @Bean
         public ModelCrawlService modelCrawlService() {
-            return new ModelCrawlServiceImpl();
+            return new ModelCrawlServiceImpl(null, null, null);
         }
     }
 }
