@@ -38,6 +38,10 @@ spring:
       auto-offset-reset: latest
       group-id: ${KAFKA_USERNAME}-${env:dev}
   security:
+    allowed:
+      methods: ${ALLOWED_METHODS:""}
+      headers: ${ALLOWED_HEADERS:""}
+      origins: ${ALLOWED_ORIGINS:""}
     jwt:
       token:
         expire: 86400000
