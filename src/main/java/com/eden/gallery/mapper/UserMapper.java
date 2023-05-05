@@ -50,6 +50,8 @@ public interface UserMapper extends BaseMapper<UserVM, User> {
      * @return authority VM
      */
     @Mapping(target = "username", source = "user", qualifiedByName = "childAuthorityUserToUsername")
+    @Mapping(target = "level", source = "level")
+    @Mapping(target = "pages", source = "pages")
     AuthorityVM toViewModel(Authorities authorities);
 
     /**

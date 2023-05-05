@@ -16,5 +16,7 @@ public class AuthResponse {
 
     private String username;
     private String token;
+    private Integer level;
+    private String defaultUrl;
     private List<AuthorityVM> authorities;
 }

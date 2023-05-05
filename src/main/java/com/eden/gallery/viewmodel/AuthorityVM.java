@@ -15,4 +15,6 @@ public class AuthorityVM {
     private String username;
     private String authority;
     private String defaultUrl;
+    private Integer level;
+    private String pages;
 }

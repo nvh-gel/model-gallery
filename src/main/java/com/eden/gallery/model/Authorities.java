@@ -54,4 +54,12 @@ public class Authorities extends BaseModel implements GrantedAuthority {
     public String getDefaultUrl() {
         return authority.getDefaultUrl();
     }
+
+    public Integer getLevel() {
+        return authority.getLevel();
+    }
+
+    public String getPages() {
+        return authority.getPages();
+    }
 }
