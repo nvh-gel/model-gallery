@@ -3,6 +3,7 @@ package com.eden.gallery.service;
 import com.eden.common.service.BaseService;
 import com.eden.gallery.viewmodel.ModelDataVM;
 import com.eden.gallery.viewmodel.ModelVM;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -43,4 +44,14 @@ public interface ModelCrawlService extends BaseService<ModelDataVM> {
      * @return update result
      */
     String linkModel(Long modelId, String objectId);
+
+    /**
+     * Find a list of model data by name and paging.
+     *
+     * @param name name to find
+     * @param page page number
+     * @param size page size
+     * @return list of found model
+     */
+    Page<ModelDataVM> findByName(String name, int page, int size);
 }

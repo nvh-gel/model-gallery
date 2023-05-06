@@ -204,4 +204,20 @@ public class ModelCrawlServiceImpl implements ModelCrawlService {
 
         return transactionId;
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Page<ModelDataVM> findByName(String name, int page, int size) {
+        Pageable pageable = PageRequest.of(page > 0 ? page - 1 : page, size, Sort.Direction.ASC, "id");
+        String queryName = name == null ? "" : name;
+
+        Page<ModelData> result = modelDataRepository.findModelByName(queryName, 1, pageable);
+        return new PageImpl<>(
+                modelDataMapper.toViewModel(result.getContent()),
+                result.getPageable(),
+                result.getTotalElements()
+        );
+    }
 }
