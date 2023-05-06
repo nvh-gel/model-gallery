@@ -5,6 +5,7 @@ import org.bson.types.ObjectId;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -33,4 +34,21 @@ public interface ModelDataRepository extends MongoRepository<ModelData, ObjectId
      * @return list of model data
      */
     Page<ModelData> findModelDataByAvgGreaterThan(float avg, Pageable pageable);
+
+    /**
+     * Find model by name in model name and tags.
+     *
+     * @param name          name to find
+     * @param numberOfAlbum minimum number of album exclusive
+     * @param pageable      page information
+     * @return a page of model data
+     */
+    @Query("{ $or: ["
+            + "{'name': { $regex: ?0, $options: 'i' }, 'skip': false, 'moved': false, 'numberOfAlbum': {$gt: ?1}}, "
+            + "{$and: ["
+            + "{'skip': false, 'moved': false, 'numberOfAlbum': {$gt: ?1}}, "
+            + "{'rel': {$elemMatch: {'name': {$regex: ?0, $options: 'i'}, 'isPublisher': false, 'isCategory': false }}}"
+            + "]}"
+            + "]}")
+    Page<ModelData> findModelByName(String name, int numberOfAlbum, Pageable pageable);
 }
