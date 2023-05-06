@@ -7,6 +7,7 @@ import com.eden.gallery.service.ModelService;
 import com.eden.gallery.service.NicknameService;
 import com.eden.gallery.viewmodel.ModelDataVM;
 import com.eden.gallery.viewmodel.ModelVM;
+import jakarta.persistence.EntityNotFoundException;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -57,6 +58,8 @@ class ModelCrawlServiceImplTest {
         Mockito.when(modelService.findById(1L))
                 .thenReturn(new ModelVM());
         Mockito.when(nicknameService.createOnQueue(any()))
+                .thenReturn(UUID.randomUUID().toString());
+        Mockito.when(modelService.createOnQueue(any()))
                 .thenReturn(UUID.randomUUID().toString());
     }
 
@@ -127,6 +130,38 @@ class ModelCrawlServiceImplTest {
         String result = modelCrawlService.linkModel(1L, "6453cf2f27dd41fbf9007da8");
         assertNotNull(result);
         assertFalse(result.isEmpty());
+    }
+
+    @Test
+    void testMoveModelInvalidObjectId() {
+        ModelVM modelVM = new ModelVM();
+        modelVM.setObjectId("123");
+        Exception exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> modelCrawlService.moveModelData(modelVM)
+        );
+        assertEquals("Invalid model object id", exception.getMessage());
+    }
+
+    @Test
+    void testMoveModelObjectIdNotFound() {
+        ModelVM modelVM = new ModelVM();
+        modelVM.setObjectId("6453c6c027dd41fbf9007da7");
+        Exception exception = assertThrows(
+                EntityNotFoundException.class,
+                () -> modelCrawlService.moveModelData(modelVM)
+        );
+        assertEquals("No model data exist with id: 6453c6c027dd41fbf9007da7", exception.getMessage());
+    }
+
+    @Test
+    void testMoveModelSuccess() {
+        ModelVM modelVM = new ModelVM();
+        modelVM.setObjectId("6453cf2f27dd41fbf9007da8");
+        String result = modelCrawlService.moveModelData(modelVM);
+        assertNotNull(result);
+        UUID uuid = UUID.fromString(result);
+        assertNotNull(uuid);
     }
 
     @TestConfiguration

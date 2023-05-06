@@ -6,7 +6,7 @@ import com.eden.gallery.utils.PageConverter;
 import com.eden.gallery.viewmodel.ModelDataVM;
 import com.eden.gallery.viewmodel.ModelVM;
 import jakarta.annotation.security.RolesAllowed;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,10 +25,11 @@ import static com.eden.gallery.security.Role.ROLE_MODERATOR;
 @RestController
 @RequestMapping("/crawl")
 @RolesAllowed({ROLE_ADMIN, ROLE_MODERATOR})
+@AllArgsConstructor
 public class CrawlerController {
 
-    private ModelCrawlService modelCrawlService;
     private final PageConverter<ModelDataVM> pageConverter = new PageConverter<>();
+    private ModelCrawlService modelCrawlService;
 
     /**
      * Get a list of crawled data for models.
@@ -37,13 +38,11 @@ public class CrawlerController {
      */
     @GetMapping("/model")
     public ResponseModel getCrawledModel() {
-
         return ResponseModel.ok(modelCrawlService.findAll(1, 20));
     }
 
     @GetMapping("/model/top/{top}")
     public ResponseModel findTopModels(@PathVariable int top) {
-
         return ResponseModel.ok(modelCrawlService.findTopModels(top));
     }
 
@@ -56,8 +55,22 @@ public class CrawlerController {
      */
     @GetMapping("/model/{page}/{size}")
     public ResponseModel getCrawledModel(@PathVariable int page, @PathVariable int size) {
-
         return pageConverter.toResponseFromIterable(modelCrawlService.findAll(page, size));
+    }
+
+    /**
+     * Search crawled model by name.
+     *
+     * @param page page number
+     * @param size page size
+     * @param name name to search
+     * @return list of model data
+     */
+    @GetMapping("/search/{page}/{size}")
+    public ResponseModel getCrawledModelsByName(@PathVariable int page,
+                                                @PathVariable int size,
+                                                @RequestParam(value = "name", required = false) String name) {
+        return pageConverter.toResponseFromIterable(modelCrawlService.findByName(name, page, size));
     }
 
     /**
@@ -80,7 +93,6 @@ public class CrawlerController {
      */
     @PutMapping("/model/skip/{id}")
     public ResponseModel skipModel(@PathVariable String id) {
-
         return ResponseModel.updated(modelCrawlService.skipModel(id));
     }
 
@@ -92,7 +104,6 @@ public class CrawlerController {
      */
     @PostMapping("/model/move")
     public ResponseModel moveModel(@RequestBody ModelVM request) {
-
         return ResponseModel.created(modelCrawlService.moveModelData(request));
     }
 
@@ -106,15 +117,6 @@ public class CrawlerController {
     @PostMapping("/model/link")
     public ResponseModel linkModel(@RequestParam("modelId") Long modelId,
                                    @RequestParam("objectId") String objectId) {
-
         return ResponseModel.updated(modelCrawlService.linkModel(modelId, objectId));
-    }
-
-    /**
-     * Setter.
-     */
-    @Autowired
-    public void setCrawlerService(ModelCrawlService modelCrawlService) {
-        this.modelCrawlService = modelCrawlService;
     }
 }
