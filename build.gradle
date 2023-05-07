@@ -9,13 +9,16 @@ plugins {
 group = 'com.eden'
 sourceCompatibility = '17'
 
+def versions = new Properties()
 file("versions.properties").withReader {
-    Properties props = new Properties()
-    props.load(it)
-    project.ext.versions = props
+    versions.load(it)
 }
 
-version = versions.version
+static def getDate() {
+    def date = new Date()
+    return date.format('yyyyMMdd')
+}
+version = versions.version + '.' + getDate()
 
 configurations {
     compileOnly {
