@@ -18,6 +18,7 @@ static def getDate() {
     def date = new Date()
     return date.format('yyyyMMdd')
 }
+
 version = versions.version + '.' + getDate()
 
 configurations {
@@ -90,6 +91,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation "io.jsonwebtoken:jjwt-api:${versions.jjwt}"
     implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 
     compileOnly 'org.projectlombok:lombok'
 
