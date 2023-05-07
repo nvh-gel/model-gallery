@@ -1,4 +1,4 @@
-package com.eden.gallery.security;
+package com.eden.gallery.security.jwt;
 
 import com.eden.gallery.model.Authorities;
 import com.eden.gallery.model.Role;
