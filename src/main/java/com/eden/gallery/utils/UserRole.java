@@ -1,4 +1,4 @@
-package com.eden.gallery.security;
+package com.eden.gallery.utils;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
  */
 @SuppressWarnings("unused")
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class Role {
+public class UserRole {
 
     public static final String ROLE_USER = "USER";
     public static final String ROLE_MODERATOR = "MODERATOR";

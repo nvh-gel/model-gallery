@@ -2,7 +2,7 @@ package com.eden.gallery.service.impl;
 
 import com.eden.gallery.model.Role;
 import com.eden.gallery.repository.sql.RoleRepository;
-import com.eden.gallery.security.JwtTokenUtils;
+import com.eden.gallery.security.jwt.JwtTokenUtils;
 import com.eden.gallery.service.AuthService;
 import com.eden.gallery.viewmodel.AuthRequest;
 import com.eden.gallery.viewmodel.AuthResponse;

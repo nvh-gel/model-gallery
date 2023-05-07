@@ -1,4 +1,4 @@
-package com.eden.gallery.security;
+package com.eden.gallery.security.jwt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
