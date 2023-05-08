@@ -1,8 +1,11 @@
 package com.eden.gallery.model;
 
 import com.eden.data.model.BaseModel;
+import com.eden.gallery.security.oauth2.AuthProvider;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -38,6 +41,13 @@ public class User extends BaseModel implements UserDetails {
     private boolean expired = false;
     private boolean locked = false;
     private boolean credentialExpired = false;
+
+    private String name;
+    private String imageUrl;
+
+    @Enumerated(EnumType.STRING)
+    private AuthProvider provider;
+    private String providerId;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private List<Authorities> authorities;
