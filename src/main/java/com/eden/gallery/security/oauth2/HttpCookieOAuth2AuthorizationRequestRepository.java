@@ -14,8 +14,8 @@ import org.springframework.util.StringUtils;
 public class HttpCookieOAuth2AuthorizationRequestRepository
         implements AuthorizationRequestRepository<OAuth2AuthorizationRequest> {
 
-    private static final String OATH2_AUTH_REQUEST_COOKIE_NAME = "oath2_auth_request";
-    private static final String REDIRECT_URI_PARAM_COOKIE_NAME = "redirect_uri";
+    public static final String OATH2_AUTH_REQUEST_COOKIE_NAME = "oath2_auth_request";
+    public static final String REDIRECT_URI_PARAM_COOKIE_NAME = "redirect_uri";
     private static final int EXPIRED_SECONDS = 300;
 
     @Override

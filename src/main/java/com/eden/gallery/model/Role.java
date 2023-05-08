@@ -27,4 +27,8 @@ public class Role extends BaseModel implements Serializable {
     private String defaultUrl;
     private int level;
     private String pages;
+
+    public static Role user() {
+        return new Role("ROLE_USER", null, 1, null);
+    }
 }
