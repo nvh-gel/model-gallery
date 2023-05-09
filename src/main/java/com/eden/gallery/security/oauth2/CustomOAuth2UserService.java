@@ -44,14 +44,16 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                 request.getClientRegistration().getRegistrationId(),
                 oAuth2User.getAttributes()
         );
-        if (StringUtils.hasText(userInfo.getEmail())) {
+        if (!StringUtils.hasText(userInfo.getEmail())) {
             throw new AuthenticationCredentialsNotFoundException("Email not found.");
         }
         Optional<User> existing = userRepository.findByEmail(userInfo.getEmail());
         User user;
         if (existing.isPresent()) {
             user = existing.get();
-            if (!user.getProvider().equals(AuthProvider.valueOf(request.getClientRegistration().getRegistrationId()))) {
+            if (!user.getProvider().equals(
+                    AuthProvider.valueOf(request.getClientRegistration().getRegistrationId().toUpperCase()))
+            ) {
                 throw new OAuth2AuthenticationException("Invalid sign up with " + user.getProvider() + " account");
             }
             user = updateUser(user, userInfo);
@@ -69,7 +71,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         user.setEmail(userInfo.getEmail());
         user.setName(userInfo.getName());
         user.setImageUrl(userInfo.getImageUrl());
-        user.setProvider(AuthProvider.valueOf(request.getClientRegistration().getRegistrationId()));
+        user.setProvider(AuthProvider.valueOf(request.getClientRegistration().getRegistrationId().toUpperCase()));
         user.setProviderId(userInfo.getId());
         return userRepository.save(user);
     }
