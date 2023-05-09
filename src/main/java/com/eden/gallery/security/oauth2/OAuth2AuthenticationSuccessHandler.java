@@ -3,7 +3,6 @@ package com.eden.gallery.security.oauth2;
 import com.eden.gallery.security.jwt.JwtTokenUtils;
 import com.eden.gallery.utils.CookieUtils;
 import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -11,7 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -37,7 +36,10 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
      * {@inheritDoc}
      */
     @Override
-    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException, ServletException {
+    public void onAuthenticationSuccess(HttpServletRequest request,
+                                        HttpServletResponse response,
+                                        FilterChain chain,
+                                        Authentication authentication) throws IOException {
         String targetUrl = determineTargetUrl(request, response, authentication);
 
         if (response.isCommitted()) {
@@ -59,7 +61,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
             throw new BadCredentialsException("Unauthorized redirect URI.");
         }
         String targetUrl = redirectUri.orElse(getDefaultTargetUrl());
-        String token = jwtTokenUtils.generateAccessToken((User) authentication.getPrincipal());
+        String token = jwtTokenUtils.generateAccessToken((UserDetails) authentication.getPrincipal());
         return UriComponentsBuilder.fromUriString(targetUrl)
                 .queryParam("token", token)
                 .build()

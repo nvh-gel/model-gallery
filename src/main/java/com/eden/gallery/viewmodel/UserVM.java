@@ -1,6 +1,7 @@
 package com.eden.gallery.viewmodel;
 
 import com.eden.common.viewmodel.BaseVM;
+import com.eden.gallery.security.oauth2.AuthProvider;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -21,4 +22,8 @@ public class UserVM extends BaseVM {
     private Boolean locked;
     private Boolean credentialExpired;
     private List<AuthorityVM> authorities;
+    private String name;
+    private String imageUrl;
+    private AuthProvider provider;
+    private String providerId;
 }
