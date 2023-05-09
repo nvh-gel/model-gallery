@@ -29,6 +29,7 @@ import static com.eden.gallery.utils.UserRole.ROLE_MODERATOR;
 public class CrawlerController {
 
     private final PageConverter<ModelDataVM> pageConverter = new PageConverter<>();
+
     private ModelCrawlService modelCrawlService;
 
     /**
@@ -81,7 +82,6 @@ public class CrawlerController {
      */
     @PutMapping("/model")
     public ResponseModel update(@RequestBody ModelDataVM request) {
-
         return ResponseModel.updated(modelCrawlService.updateOnQueue(request));
     }
 

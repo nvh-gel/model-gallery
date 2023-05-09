@@ -28,7 +28,6 @@ public class AuthController {
      */
     @PostMapping("/login")
     public ResponseModel login(@RequestBody AuthRequest request) {
-
         try {
             return ResponseModel.ok(authService.login(request));
         } catch (BadCredentialsException ex) {

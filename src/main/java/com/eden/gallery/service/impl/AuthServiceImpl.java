@@ -28,6 +28,14 @@ public class AuthServiceImpl implements AuthService {
     private final JwtTokenUtils jwtTokenUtils;
     private final List<Role> roles;
 
+    /**
+     * Constructor.
+     *
+     * @param authenticationConfiguration authentication configuration bean
+     * @param jwtTokenUtils               JWT processing bean
+     * @param roleRepository              user role repository bean
+     * @throws Exception if authentication manager not exist
+     */
     public AuthServiceImpl(AuthenticationConfiguration authenticationConfiguration,
                            JwtTokenUtils jwtTokenUtils,
                            RoleRepository roleRepository) throws Exception {

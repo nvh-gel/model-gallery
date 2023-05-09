@@ -1,7 +1,6 @@
 package com.eden.gallery.mapper;
 
 import com.eden.gallery.model.Authorities;
-import com.eden.gallery.model.Role;
 import com.eden.gallery.model.User;
 import com.eden.gallery.viewmodel.AuthorityVM;
 import com.eden.gallery.viewmodel.UserVM;
@@ -40,7 +39,8 @@ public interface UserMapper extends BaseMapper<UserVM, User> {
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "user", source = "username", qualifiedByName = "childAuthorityUsernameToUser")
-    @Mapping(target = "authority", source = "authority", qualifiedByName = "authorityStringToRole")
+    @Mapping(target = "authority", source = "authority")
+    @Mapping(target = "auth", ignore = true)
     Authorities toModel(AuthorityVM authorityVM);
 
     /**
@@ -76,12 +76,5 @@ public interface UserMapper extends BaseMapper<UserVM, User> {
     @Named("childAuthorityUserToUsername")
     default String childAuthorityUserToUsername(User user) {
         return user.getUsername();
-    }
-
-    @Named("authorityStringToRole")
-    default Role authorityStringToRole(String authority) {
-        Role role = new Role();
-        role.setName(authority);
-        return role;
     }
 }

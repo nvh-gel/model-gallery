@@ -1,6 +1,7 @@
 package com.eden.gallery.model;
 
 import com.eden.data.model.BaseModel;
+import com.eden.gallery.utils.Constants;
 import jakarta.persistence.Entity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -28,7 +29,12 @@ public class Role extends BaseModel implements Serializable {
     private int level;
     private String pages;
 
+    /**
+     * Return default static role for USER.
+     *
+     * @return role USER
+     */
     public static Role user() {
-        return new Role("ROLE_USER", null, 1, null);
+        return new Role(Constants.ROLE_USER, null, 1, null);
     }
 }
