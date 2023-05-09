@@ -16,11 +16,10 @@ public class HttpCookieOAuth2AuthorizationRequestRepository
 
     public static final String OATH2_AUTH_REQUEST_COOKIE_NAME = "oath2_auth_request";
     public static final String REDIRECT_URI_PARAM_COOKIE_NAME = "redirect_uri";
-    private static final int EXPIRED_SECONDS = 300;
+    private static final int EXPIRED_SECONDS = 600;
 
     @Override
     public OAuth2AuthorizationRequest loadAuthorizationRequest(HttpServletRequest request) {
-        log.info("Loading cookies.");
         return CookieUtils.getCookie(request, OATH2_AUTH_REQUEST_COOKIE_NAME)
                 .map(c -> CookieUtils.deserialize(c, OAuth2AuthorizationRequest.class))
                 .orElse(null);
@@ -30,7 +29,6 @@ public class HttpCookieOAuth2AuthorizationRequestRepository
     public void saveAuthorizationRequest(OAuth2AuthorizationRequest authorizationRequest,
                                          HttpServletRequest request,
                                          HttpServletResponse response) {
-        log.info("saving cookies.");
         if (null == authorizationRequest) {
             CookieUtils.deleteCookie(request, response, OATH2_AUTH_REQUEST_COOKIE_NAME);
             CookieUtils.deleteCookie(request, response, REDIRECT_URI_PARAM_COOKIE_NAME);
@@ -50,7 +48,6 @@ public class HttpCookieOAuth2AuthorizationRequestRepository
     @Override
     public OAuth2AuthorizationRequest removeAuthorizationRequest(HttpServletRequest request,
                                                                  HttpServletResponse response) {
-        log.info("remove cookies.");
         return this.loadAuthorizationRequest(request);
     }
 }

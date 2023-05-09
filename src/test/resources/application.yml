@@ -19,6 +19,15 @@ spring:
     jwt:
       token:
         secret: l78mybysBXZHGbLNERzPNgrrXrtFqfLa
+    oauth2:
+      client:
+        registration:
+          google:
+            clientId: ${GG_CLIENT_ID}
+            clientSecret: ${GG_CLIENT_SECRET}
+            scope:
+              - email
+              - profile
   data:
     mongodb:
       uri: ${MONGO_URI}

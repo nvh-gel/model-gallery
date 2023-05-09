@@ -1,16 +1,12 @@
 package com.eden.gallery.security.jwt;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
@@ -35,7 +31,7 @@ public class JwtTokenUtils {
      * @param user user data
      * @return token string
      */
-    public String generateAccessToken(User user) {
+    public String generateAccessToken(UserDetails user) {
         String subject = "%s %s %s".formatted(
                 user.getUsername(),
                 user.getPassword(),
