@@ -26,7 +26,6 @@ public class NicknameConsumer extends BaseConsumer<NicknameVM> {
      * Constructor.
      */
     public NicknameConsumer(NicknameService nicknameService) {
-
         actionMap.put(Action.CREATE, nicknameService::create);
         actionMap.put(Action.UPDATE, nicknameService::update);
         actionMap.put(Action.DELETE, nick -> nicknameService.delete(nick.getId()));
@@ -39,7 +38,6 @@ public class NicknameConsumer extends BaseConsumer<NicknameVM> {
     @KafkaListener(topics = "${spring.kafka.properties.topic.nick}",
             autoStartup = "${spring.kafka.consumer.properties.auto-start:true}")
     public void processMessage(QueueMessage<NicknameVM> queueMessage) {
-
         log.info(RECEIVED_MESSAGE, queueMessage, topic);
         processByActionMap(queueMessage);
     }

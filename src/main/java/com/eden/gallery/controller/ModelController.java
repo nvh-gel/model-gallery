@@ -7,7 +7,7 @@ import com.eden.gallery.utils.ModelCriteria;
 import com.eden.gallery.utils.PageConverter;
 import com.eden.gallery.viewmodel.ModelVM;
 import jakarta.annotation.security.RolesAllowed;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,10 +25,12 @@ import static com.eden.gallery.utils.UserRole.ROLE_MODERATOR;
  */
 @RestController
 @RequestMapping("/model")
+@AllArgsConstructor
 public class ModelController {
 
-    private ModelService modelService;
     private final PageConverter<ModelVM> pageConverter = new PageConverter<>();
+
+    private ModelService modelService;
 
     /**
      * Create model from request.
@@ -109,13 +111,5 @@ public class ModelController {
     @PostMapping("/search")
     public ResponseModel searchModel(@RequestBody SearchRequest<ModelCriteria> request) {
         return pageConverter.toResponseFromPaging(modelService.searchModel(request));
-    }
-
-    /**
-     * Setter.
-     */
-    @Autowired
-    public void setModelService(ModelService modelService) {
-        this.modelService = modelService;
     }
 }

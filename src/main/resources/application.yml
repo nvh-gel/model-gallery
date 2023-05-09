@@ -45,6 +45,8 @@ spring:
         expire: 86400000
         secret: fWVI7z4dDN6bWG5XNPH7jqPRjWbvbD5n
     oauth2:
+      authorized:
+        redirectUris: ${AUTH_REDIRECT_URIS}
       client:
         registration:
           google:

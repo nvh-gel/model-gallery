@@ -3,7 +3,7 @@ package com.eden.gallery.controller;
 import com.eden.common.utils.ResponseModel;
 import com.eden.gallery.service.UserService;
 import com.eden.gallery.viewmodel.UserVM;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +16,7 @@ import static com.eden.gallery.utils.UserRole.ROLE_USER;
  */
 @RestController
 @RequestMapping("/user")
+@AllArgsConstructor
 public class UserController {
 
     private UserService userService;
@@ -28,15 +29,6 @@ public class UserController {
      */
     @PostMapping("/register")
     public ResponseModel createUser(@RequestBody UserVM request) {
-
         return ResponseModel.created(userService.createOnQueue(request, ROLE_USER));
-    }
-
-    /**
-     * Setter.
-     */
-    @Autowired
-    public void setUserService(UserService userService) {
-        this.userService = userService;
     }
 }

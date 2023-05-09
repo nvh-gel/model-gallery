@@ -10,5 +10,13 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface NicknameRepository extends JpaRepository<Nickname, Long> {
 
+    /**
+     * Check if nickname exist by nick and model
+     *
+     * @param name    nickname string
+     * @param url     nickname url
+     * @param modelId model id
+     * @return true if exists, else false
+     */
     boolean existsByNickAndUrlAndModelId(String name, String url, Long modelId);
 }
