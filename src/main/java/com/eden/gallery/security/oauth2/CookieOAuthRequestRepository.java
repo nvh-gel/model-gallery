@@ -9,15 +9,23 @@ import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequ
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+/**
+ * Cookie repository to save request oauth2 request and redirect uri.
+ */
 @Component
 @Log4j2
-public class HttpCookieOAuth2AuthorizationRequestRepository
-        implements AuthorizationRequestRepository<OAuth2AuthorizationRequest> {
+public class CookieOAuthRequestRepository implements AuthorizationRequestRepository<OAuth2AuthorizationRequest> {
 
     public static final String OATH2_AUTH_REQUEST_COOKIE_NAME = "oath2_auth_request";
     public static final String REDIRECT_URI_PARAM_COOKIE_NAME = "redirect_uri";
     private static final int EXPIRED_SECONDS = 600;
 
+    /**
+     * Read cookie for auth request.
+     *
+     * @param request the {@code HttpServletRequest}
+     * @return oauth2 request
+     */
     @Override
     public OAuth2AuthorizationRequest loadAuthorizationRequest(HttpServletRequest request) {
         return CookieUtils.getCookie(request, OATH2_AUTH_REQUEST_COOKIE_NAME)
@@ -25,6 +33,13 @@ public class HttpCookieOAuth2AuthorizationRequestRepository
                 .orElse(null);
     }
 
+    /**
+     * Save oauth request and redirect url into cookie.
+     *
+     * @param authorizationRequest the {@link OAuth2AuthorizationRequest}
+     * @param request              the {@code HttpServletRequest}
+     * @param response             the {@code HttpServletResponse}
+     */
     @Override
     public void saveAuthorizationRequest(OAuth2AuthorizationRequest authorizationRequest,
                                          HttpServletRequest request,
@@ -45,6 +60,13 @@ public class HttpCookieOAuth2AuthorizationRequestRepository
         }
     }
 
+    /**
+     * Reload oauth request from cookie.
+     *
+     * @param request  the {@code HttpServletRequest}
+     * @param response the {@code HttpServletResponse}
+     * @return saved oauth request
+     */
     @Override
     public OAuth2AuthorizationRequest removeAuthorizationRequest(HttpServletRequest request,
                                                                  HttpServletResponse response) {

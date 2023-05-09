@@ -10,7 +10,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.lang.NonNull;
 import org.springframework.util.StringUtils;
 
-import static com.eden.gallery.utils.Strings.LIKE_PATTERN;
+import static com.eden.gallery.utils.Constants.LIKE_PATTERN;
 
 /**
  * Spec builder for model criteria.
@@ -41,7 +41,6 @@ public class ModelSpecificationBuilder extends SpecificationBuilder<Model> {
      * @param criteria search criteria
      */
     private void fromCriteria(@NonNull ModelCriteria criteria) {
-
         if (StringUtils.hasText(criteria.getName())) {
             hasName(criteria.getName());
         }
@@ -53,7 +52,6 @@ public class ModelSpecificationBuilder extends SpecificationBuilder<Model> {
      * @param name name to search
      */
     public void hasName(String name) {
-
         String trimmed = name.trim().toLowerCase();
         Specification<Model> nameLike = (model, cq, cb) ->
                 cb.like(cb.lower(model.get("name")), LIKE_PATTERN.formatted(trimmed));

@@ -41,7 +41,6 @@ public class User extends BaseModel implements UserDetails {
     private boolean expired = false;
     private boolean locked = false;
     private boolean credentialExpired = false;
-
     private String name;
     private String imageUrl;
 
@@ -52,16 +51,25 @@ public class User extends BaseModel implements UserDetails {
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private List<Authorities> authorities;
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isAccountNonExpired() {
         return !expired;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isAccountNonLocked() {
         return !locked;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isCredentialsNonExpired() {
         return !credentialExpired;

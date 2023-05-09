@@ -1,7 +1,7 @@
 package com.eden.gallery.security;
 
 import com.eden.gallery.security.jwt.JwtTokenFilter;
-import com.eden.gallery.security.oauth2.CustomOAuth2UserService;
+import com.eden.gallery.security.oauth2.user.CustomOAuth2UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -61,14 +61,21 @@ public class SecurityConfig {
                 .permitAll()
                 .requestMatchers("/", "/healthz")
                 .permitAll()
-                .anyRequest().authenticated()
-                .and().oauth2Login()
-                .authorizationEndpoint().authorizationRequestRepository(authorizationRequestRepository)
-                .and().redirectionEndpoint().baseUri("/oauth2/callback/*")
-                .and().userInfoEndpoint().userService(customOAuth2UserService)
-                .and().successHandler(oAuth2AuthenticationSuccessHandler)
+                .anyRequest()
+                .authenticated()
+                .and()
+                .oauth2Login()
+                .authorizationEndpoint()
+                .authorizationRequestRepository(authorizationRequestRepository)
+                .and()
+                .redirectionEndpoint()
+                .baseUri("/oauth2/callback/*")
+                .and()
+                .userInfoEndpoint()
+                .userService(customOAuth2UserService)
+                .and()
+                .successHandler(oAuth2AuthenticationSuccessHandler)
                 .failureHandler(oAuth2AuthenticationFailureHandler);
-
         http.addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }

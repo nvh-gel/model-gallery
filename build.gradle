@@ -92,6 +92,7 @@ dependencies {
     implementation "io.jsonwebtoken:jjwt-api:${versions.jjwt}"
     implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+    implementation "com.google.code.gson:gson:${versions.gson}"
 
     compileOnly 'org.projectlombok:lombok'
 

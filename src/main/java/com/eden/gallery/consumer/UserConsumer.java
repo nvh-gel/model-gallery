@@ -34,7 +34,6 @@ public class UserConsumer extends BaseConsumer<UserVM> {
             autoStartup = "${spring.kafka.consumer.properties.auto-start:true}"
     )
     public void processMessage(QueueMessage<UserVM> queueMessage) {
-
         log.info(RECEIVED_MESSAGE, queueMessage, topic);
         processByActionMap(queueMessage);
     }
