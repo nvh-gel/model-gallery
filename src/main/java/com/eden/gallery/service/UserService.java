@@ -25,4 +25,11 @@ public interface UserService extends BaseService<UserVM> {
      * @return creation transaction uuid
      */
     String createOnQueue(UserVM request, String... roles);
+
+    /**
+     * Get currently logged-in user data from security context.
+     *
+     * @return user information
+     */
+    UserVM getCurrentUser();
 }
