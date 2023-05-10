@@ -42,6 +42,7 @@ class UserServiceImplTest {
             return new UserServiceImpl(userRepository,
                     null,
                     null,
+                    null,
                     null);
         }
     }
