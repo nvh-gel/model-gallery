@@ -1,6 +1,7 @@
 package com.eden.gallery.model;
 
 import com.eden.data.model.BaseModel;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.ForeignKey;
@@ -20,6 +21,7 @@ import org.springframework.security.core.GrantedAuthority;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@SuppressWarnings("unused")
 public class Authorities extends BaseModel implements GrantedAuthority {
 
     @ManyToOne(targetEntity = Role.class, fetch = FetchType.EAGER)
@@ -27,7 +29,10 @@ public class Authorities extends BaseModel implements GrantedAuthority {
             referencedColumnName = "name",
             foreignKey = @ForeignKey(name = "fk_authority_role")
     )
-    private Role authority;
+    private transient Role auth;
+
+    @Column(name = "authority")
+    private String authority;
 
     @ManyToOne(targetEntity = User.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "username",
@@ -42,7 +47,7 @@ public class Authorities extends BaseModel implements GrantedAuthority {
      */
     @Override
     public String getAuthority() {
-        return authority.getName();
+        return authority;
     }
 
     /**
@@ -50,16 +55,25 @@ public class Authorities extends BaseModel implements GrantedAuthority {
      *
      * @return string of default url
      */
-    @SuppressWarnings("unused")
     public String getDefaultUrl() {
-        return authority.getDefaultUrl();
+        return auth != null ? auth.getDefaultUrl() : "/";
     }
 
+    /**
+     * Return calculated user access level.
+     *
+     * @return role access level
+     */
     public Integer getLevel() {
-        return authority.getLevel();
+        return auth != null ? auth.getLevel() : 0;
     }
 
+    /**
+     * Return role configured pages.
+     *
+     * @return string list of page
+     */
     public String getPages() {
-        return authority.getPages();
+        return auth != null ? auth.getPages() : "";
     }
 }

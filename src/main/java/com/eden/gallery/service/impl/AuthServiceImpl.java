@@ -1,12 +1,12 @@
 package com.eden.gallery.service.impl;
 
-import com.eden.gallery.model.Role;
-import com.eden.gallery.repository.sql.RoleRepository;
-import com.eden.gallery.security.JwtTokenUtils;
+import com.eden.gallery.security.jwt.JwtTokenUtils;
 import com.eden.gallery.service.AuthService;
+import com.eden.gallery.utils.RoleUtils;
 import com.eden.gallery.viewmodel.AuthRequest;
 import com.eden.gallery.viewmodel.AuthResponse;
 import com.eden.gallery.viewmodel.AuthorityVM;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -26,14 +26,23 @@ public class AuthServiceImpl implements AuthService {
 
     private final AuthenticationManager authenticationManager;
     private final JwtTokenUtils jwtTokenUtils;
-    private final List<Role> roles;
+    private final RoleUtils roleUtils;
 
+    /**
+     * Constructor.
+     *
+     * @param authenticationConfiguration authentication configuration bean
+     * @param jwtTokenUtils               JWT processing bean
+     * @param roleUtils                   user role utils bean
+     * @throws Exception if authentication manager not exist
+     */
+    @Autowired
     public AuthServiceImpl(AuthenticationConfiguration authenticationConfiguration,
                            JwtTokenUtils jwtTokenUtils,
-                           RoleRepository roleRepository) throws Exception {
+                           RoleUtils roleUtils) throws Exception {
         this.authenticationManager = authenticationConfiguration.getAuthenticationManager();
         this.jwtTokenUtils = jwtTokenUtils;
-        roles = roleRepository.findAllByOrderByLevelDesc();
+        this.roleUtils = roleUtils;
     }
 
     /**
@@ -50,7 +59,7 @@ public class AuthServiceImpl implements AuthService {
         User user = (User) authentication.getPrincipal();
         String token = jwtTokenUtils.generateAccessToken(user);
         List<String> authorities = user.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
-        List<AuthorityVM> userAuthorities = roles.stream()
+        List<AuthorityVM> userAuthorities = roleUtils.getRoles().stream()
                 .filter(role -> authorities.contains(role.getName()))
                 .map(role -> new AuthorityVM(
                         user.getUsername(),
@@ -58,8 +67,7 @@ public class AuthServiceImpl implements AuthService {
                         role.getDefaultUrl(),
                         role.getLevel(),
                         role.getPages()
-                ))
-                .toList();
+                )).toList();
         Integer level = userAuthorities.stream().findFirst().map(AuthorityVM::getLevel).orElse(0);
         String defaultUrl = userAuthorities.stream().findFirst().map(AuthorityVM::getDefaultUrl).orElse("/");
         return new AuthResponse(user.getUsername(), token, level, defaultUrl, userAuthorities);

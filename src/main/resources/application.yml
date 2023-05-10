@@ -39,13 +39,23 @@ spring:
       group-id: ${KAFKA_USERNAME}-${env:dev}
   security:
     allowed:
-      methods: ${ALLOWED_METHODS:""}
-      headers: ${ALLOWED_HEADERS:""}
       origins: ${ALLOWED_ORIGINS:""}
     jwt:
       token:
         expire: 86400000
         secret: fWVI7z4dDN6bWG5XNPH7jqPRjWbvbD5n
+    oauth2:
+      authorized:
+        redirectUris: ${AUTH_REDIRECT_URIS:""}
+      client:
+        registration:
+          google:
+            clientId: ${GG_CLIENT_ID}
+            clientSecret: ${GG_CLIENT_SECRET}
+            redirectUri: "{baseUrl}/oauth2/callback/{registrationId}"
+            scope:
+              - email
+              - profile
   data:
     mongodb:
       uri: ${MONGO_URI}

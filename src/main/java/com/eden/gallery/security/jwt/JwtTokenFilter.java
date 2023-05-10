@@ -1,4 +1,4 @@
-package com.eden.gallery.security;
+package com.eden.gallery.security.jwt;
 
 import com.eden.gallery.model.Authorities;
 import com.eden.gallery.model.Role;
@@ -23,7 +23,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- *
+ * Security filter for JWT token.
  */
 @Component
 @Log4j2
@@ -67,9 +67,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     private void setAuthenticationContext(String token, HttpServletRequest request) {
         UserDetails userDetails = getUserDetails(token);
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-                userDetails,
-                null,
-                userDetails.getAuthorities());
+                userDetails, null, userDetails.getAuthorities());
         authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
     }
@@ -108,7 +106,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         User user = new User();
         user.setUsername(jwtSubjects[0]);
         List<Authorities> authorities = Arrays.stream(jwtSubjects[2].split(","))
-                .map(str -> new Authorities(new Role(str, null, 0, null), user))
+                .map(str -> new Authorities(new Role(str, null, 0, null), str, user))
                 .toList();
         user.setAuthorities(authorities);
         return user;
