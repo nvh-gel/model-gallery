@@ -46,7 +46,7 @@ spring:
         secret: fWVI7z4dDN6bWG5XNPH7jqPRjWbvbD5n
     oauth2:
       authorized:
-        redirectUris: ${AUTH_REDIRECT_URIS}
+        redirectUris: ${AUTH_REDIRECT_URIS:""}
       client:
         registration:
           google:

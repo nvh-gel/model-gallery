@@ -1,9 +1,11 @@
 package com.eden.gallery.service.impl;
 
 import com.eden.gallery.model.Model;
+import com.eden.gallery.producer.ModelProducer;
 import com.eden.gallery.repository.sql.ModelRepository;
 import com.eden.gallery.service.ModelService;
 import com.eden.gallery.viewmodel.ModelVM;
+import com.eden.queue.util.Action;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,11 +22,13 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 
 @ExtendWith(SpringExtension.class)
 class ModelServiceImplTest {
@@ -33,19 +37,21 @@ class ModelServiceImplTest {
     private ModelServiceImpl modelService;
     @MockBean
     private ModelRepository modelRepository;
+    @MockBean
+    private ModelProducer modelProducer;
 
     @BeforeEach
     void setUp() {
         modelService.setModelRepository(modelRepository);
+        modelService.setModelProducer(modelProducer);
 
-        Mockito.when(modelRepository.findById(999L))
-                .thenReturn(Optional.empty());
+        Mockito.when(modelRepository.findById(999L)).thenReturn(Optional.empty());
         Model model = new Model();
         model.setId(1L);
-        Mockito.when(modelRepository.findById(1L))
-                .thenReturn(Optional.of(model));
-        Mockito.when(modelRepository.save(any()))
-                .thenReturn(model);
+        Mockito.when(modelRepository.findById(1L)).thenReturn(Optional.of(model));
+        Mockito.when(modelRepository.save(any())).thenReturn(model);
+        Mockito.when(modelProducer.sendMessageToQueue(eq(Action.DELETE), any()))
+                .thenReturn(UUID.randomUUID().toString());
     }
 
     @Test
@@ -93,6 +99,14 @@ class ModelServiceImplTest {
     void testDeleteSuccess() {
         ModelVM result = modelService.delete(1L);
         assertNotNull(result);
+    }
+
+    @Test
+    void testDeleteOnQueueSuccess() {
+        String result = modelService.deleteOnQueue(1L);
+        assertNotNull(result);
+        UUID uuid = UUID.fromString(result);
+        assertNotNull(uuid);
     }
 
     @TestConfiguration
