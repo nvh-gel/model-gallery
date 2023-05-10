@@ -1,7 +1,12 @@
 package com.eden.gallery.model;
 
 import com.eden.data.model.BaseModel;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.ForeignKey;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -51,7 +56,7 @@ public class Authorities extends BaseModel implements GrantedAuthority {
      * @return string of default url
      */
     public String getDefaultUrl() {
-        return auth.getDefaultUrl();
+        return auth != null ? auth.getDefaultUrl() : "/";
     }
 
     /**
@@ -60,7 +65,7 @@ public class Authorities extends BaseModel implements GrantedAuthority {
      * @return role access level
      */
     public Integer getLevel() {
-        return auth.getLevel();
+        return auth != null ? auth.getLevel() : 0;
     }
 
     /**
@@ -69,6 +74,6 @@ public class Authorities extends BaseModel implements GrantedAuthority {
      * @return string list of page
      */
     public String getPages() {
-        return auth.getPages();
+        return auth != null ? auth.getPages() : "";
     }
 }
