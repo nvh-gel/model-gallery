@@ -4,9 +4,11 @@ import com.eden.gallery.mapper.UserMapper;
 import com.eden.gallery.producer.UserProducer;
 import com.eden.gallery.repository.sql.UserRepository;
 import com.eden.gallery.service.UserService;
+import com.eden.gallery.utils.RoleUtils;
 import com.eden.gallery.viewmodel.AuthorityVM;
 import com.eden.gallery.viewmodel.UserVM;
 import com.eden.queue.util.Action;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.Setter;
@@ -17,13 +19,17 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.Arrays;
 import java.util.Base64;
+import java.util.Optional;
 
 /**
  * Implementation for user service.
@@ -39,6 +45,7 @@ public class UserServiceImpl implements UserService {
     private UserDetailsManager userDetailsService;
     private UserProducer userProducer;
     private BCryptPasswordEncoder bCryptPasswordEncoder;
+    private RoleUtils roleUtils;
 
     /**
      * {@inheritDoc}
@@ -144,5 +151,26 @@ public class UserServiceImpl implements UserService {
             return authorityVM;
         }).toList());
         return userProducer.sendMessageToQueue(Action.CREATE, request);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public UserVM getCurrentUser() {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        if (!StringUtils.hasText(username)) {
+            throw new AuthenticationCredentialsNotFoundException("User is not authenticated.");
+        }
+
+        Optional<com.eden.gallery.model.User> existing = userRepository.findByUsername(username);
+        if (existing.isEmpty()) {
+            throw new EntityNotFoundException("User with username " + username + " not found");
+        } else {
+            com.eden.gallery.model.User user = existing.get();
+            user.getAuthorities().forEach(a -> a.setAuth(roleUtils.getByRoleName(a.getAuthority())));
+            return userMapper.toViewModel(existing.get());
+        }
     }
 }
