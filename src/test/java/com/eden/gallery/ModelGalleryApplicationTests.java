@@ -9,7 +9,6 @@ class ModelGalleryApplicationTests {
 
     @Test
     void contextLoads() {
-
         Assertions.assertTrue(true);
     }
 }
