@@ -9,6 +9,7 @@ import com.eden.gallery.viewmodel.UserVM;
 import com.eden.queue.util.Action;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import org.mapstruct.factory.Mappers;
 import org.springframework.data.domain.Page;
@@ -30,6 +31,7 @@ import java.util.Base64;
 @Service
 @Log4j2
 @AllArgsConstructor
+@Setter
 public class UserServiceImpl implements UserService {
 
     private final UserMapper userMapper = Mappers.getMapper(UserMapper.class);

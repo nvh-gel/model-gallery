@@ -107,6 +107,7 @@ dependencies {
     testImplementation 'com.h2database:h2'
     testImplementation 'org.springframework.kafka:spring-kafka-test'
     testImplementation 'org.springframework.security:spring-security-test'
+    testImplementation "de.flapdoodle.embed:de.flapdoodle.embed.mongo.spring30x:${versions.flapdoodle}"
 }
 
 tasks.named('test') {

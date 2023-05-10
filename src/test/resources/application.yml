@@ -20,6 +20,8 @@ spring:
       token:
         secret: l78mybysBXZHGbLNERzPNgrrXrtFqfLa
     oauth2:
+      authorized:
+        redirectUris: ${AUTH_REDIRECT_URIS:""}
       client:
         registration:
           google:
@@ -28,10 +30,11 @@ spring:
             scope:
               - email
               - profile
-  data:
-    mongodb:
-      uri: ${MONGO_URI}
-      database: test
   jpa:
     hibernate:
       ddl-auto: create-drop
+de:
+  flapdoodle:
+    mongodb:
+      embedded:
+        version: 6.0.5
