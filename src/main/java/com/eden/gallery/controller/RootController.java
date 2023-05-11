@@ -1,6 +1,7 @@
 package com.eden.gallery.controller;
 
 import com.eden.common.utils.ResponseModel;
+import com.eden.gallery.aop.LogExecutionTime;
 import lombok.AllArgsConstructor;
 import org.springframework.boot.info.BuildProperties;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,6 +24,7 @@ public class RootController {
      * @return response of info
      */
     @GetMapping
+    @LogExecutionTime
     public ResponseModel home() {
         return ResponseModel.ok("Model Gallery API - versions %s".formatted(buildProperties.getVersion()));
     }
@@ -33,6 +35,7 @@ public class RootController {
      * @return response of UP
      */
     @GetMapping("/healthz")
+    @LogExecutionTime
     public ResponseModel health() {
         return ResponseModel.ok("UP");
     }

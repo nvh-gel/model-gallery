@@ -2,6 +2,7 @@ package com.eden.gallery.controller;
 
 import com.eden.common.utils.ResponseModel;
 import com.eden.common.utils.SearchRequest;
+import com.eden.gallery.aop.LogExecutionTime;
 import com.eden.gallery.service.ModelService;
 import com.eden.gallery.utils.ModelCriteria;
 import com.eden.gallery.utils.PageConverter;
@@ -40,6 +41,7 @@ public class ModelController {
      */
     @RolesAllowed({ROLE_ADMIN, ROLE_MODERATOR})
     @PostMapping
+    @LogExecutionTime
     public ResponseModel createModel(@RequestBody ModelVM request) {
         return ResponseModel.created(modelService.createOnQueue(request));
     }
@@ -50,6 +52,7 @@ public class ModelController {
      * @return list of models
      */
     @GetMapping
+    @LogExecutionTime
     public ResponseModel getModels() {
         return pageConverter.toResponseFromIterable(modelService.findAll(1, 10));
     }
@@ -62,6 +65,7 @@ public class ModelController {
      * @return list of models
      */
     @GetMapping("/{page}/{size}")
+    @LogExecutionTime
     public ResponseModel getModelsByPage(@PathVariable Integer page, @PathVariable Integer size) {
         return pageConverter.toResponseFromIterable(modelService.findAll(page, size));
     }
@@ -73,6 +77,7 @@ public class ModelController {
      * @return response of found model
      */
     @GetMapping("/{id}")
+    @LogExecutionTime
     public ResponseModel getModelById(@PathVariable Long id) {
         return ResponseModel.ok(modelService.findById(id));
     }
@@ -85,6 +90,7 @@ public class ModelController {
      */
     @RolesAllowed({ROLE_ADMIN, ROLE_MODERATOR})
     @PutMapping
+    @LogExecutionTime
     public ResponseModel updateModel(@RequestBody ModelVM request) {
         return ResponseModel.updated(modelService.updateOnQueue(request));
     }
@@ -97,6 +103,7 @@ public class ModelController {
      */
     @RolesAllowed({ROLE_ADMIN, ROLE_MODERATOR})
     @DeleteMapping("/{id}")
+    @LogExecutionTime
     public ResponseModel deleteModel(@PathVariable Long id) {
         return ResponseModel.deleted(modelService.deleteOnQueue(id));
     }
@@ -109,6 +116,7 @@ public class ModelController {
      */
     @RolesAllowed({ROLE_ADMIN, ROLE_MODERATOR})
     @PostMapping("/search")
+    @LogExecutionTime
     public ResponseModel searchModel(@RequestBody SearchRequest<ModelCriteria> request) {
         return pageConverter.toResponseFromPaging(modelService.searchModel(request));
     }
