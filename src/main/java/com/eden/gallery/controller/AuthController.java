@@ -1,6 +1,7 @@
 package com.eden.gallery.controller;
 
 import com.eden.common.utils.ResponseModel;
+import com.eden.gallery.aop.LogExecutionTime;
 import com.eden.gallery.service.AuthService;
 import com.eden.gallery.viewmodel.AuthRequest;
 import lombok.AllArgsConstructor;
@@ -27,6 +28,7 @@ public class AuthController {
      * @return authentication response with username and token
      */
     @PostMapping("/login")
+    @LogExecutionTime
     public ResponseModel login(@RequestBody AuthRequest request) {
         try {
             return ResponseModel.ok(authService.login(request));

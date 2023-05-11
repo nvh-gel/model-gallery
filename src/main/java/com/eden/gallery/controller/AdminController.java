@@ -1,6 +1,7 @@
 package com.eden.gallery.controller;
 
 import com.eden.common.utils.ResponseModel;
+import com.eden.gallery.aop.LogExecutionTime;
 import com.eden.gallery.service.UserService;
 import com.eden.gallery.utils.PageConverter;
 import com.eden.gallery.viewmodel.UserVM;
@@ -31,6 +32,7 @@ public class AdminController {
      * @return creation result
      */
     @PostMapping("/user")
+    @LogExecutionTime
     public ResponseModel addUserWithRole(@RequestBody UserVM request, @RequestParam("roles") String[] roles) {
         return ResponseModel.created(userService.createOnQueue(request, roles));
     }
@@ -43,6 +45,7 @@ public class AdminController {
      * @return list of users
      */
     @GetMapping("/user/{page}/{size}")
+    @LogExecutionTime
     public ResponseModel getAllUsers(@PathVariable Integer page, @PathVariable Integer size) {
         return pageConverter.toResponseFromIterable(userService.findAll(page, size));
     }

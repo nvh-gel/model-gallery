@@ -1,6 +1,7 @@
 package com.eden.gallery.controller;
 
 import com.eden.common.utils.ResponseModel;
+import com.eden.gallery.aop.LogExecutionTime;
 import com.eden.gallery.service.NicknameService;
 import com.eden.gallery.viewmodel.NicknameVM;
 import lombok.AllArgsConstructor;
@@ -29,6 +30,7 @@ public class NicknameController {
      * @return creation response
      */
     @PostMapping
+    @LogExecutionTime
     public ResponseModel createNick(@RequestBody NicknameVM request) {
         return ResponseModel.created(nicknameService.createOnQueue(request));
     }
@@ -40,6 +42,7 @@ public class NicknameController {
      * @return updating request
      */
     @PutMapping
+    @LogExecutionTime
     public ResponseModel updateNick(@RequestBody NicknameVM request) {
         return ResponseModel.updated(nicknameService.updateOnQueue(request));
     }
@@ -51,6 +54,7 @@ public class NicknameController {
      * @return deletion result
      */
     @DeleteMapping("/{id}")
+    @LogExecutionTime
     public ResponseModel deleteNick(@PathVariable Long id) {
         return ResponseModel.deleted(nicknameService.deleteOnQueue(id));
     }

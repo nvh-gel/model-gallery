@@ -1,6 +1,7 @@
 package com.eden.gallery.controller;
 
 import com.eden.common.utils.ResponseModel;
+import com.eden.gallery.aop.LogExecutionTime;
 import com.eden.gallery.service.UserService;
 import com.eden.gallery.viewmodel.UserVM;
 import lombok.AllArgsConstructor;
@@ -29,6 +30,7 @@ public class UserController {
      * @return response of creation result
      */
     @PostMapping("/register")
+    @LogExecutionTime
     public ResponseModel createUser(@RequestBody UserVM request) {
         return ResponseModel.created(userService.createOnQueue(request, ROLE_USER));
     }
@@ -39,6 +41,7 @@ public class UserController {
      * @return user info
      */
     @GetMapping("/me")
+    @LogExecutionTime
     public ResponseModel getCurrentUserInfo() {
         return ResponseModel.ok(userService.getCurrentUser());
     }
