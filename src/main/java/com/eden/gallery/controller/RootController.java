@@ -2,8 +2,10 @@ package com.eden.gallery.controller;
 
 import com.eden.common.utils.ResponseModel;
 import com.eden.gallery.aop.LogExecutionTime;
+import com.eden.gallery.aop.ResponseHandling;
 import lombok.AllArgsConstructor;
 import org.springframework.boot.info.BuildProperties;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,8 +27,9 @@ public class RootController {
      */
     @GetMapping
     @LogExecutionTime
-    public ResponseModel home() {
-        return ResponseModel.ok("Model Gallery API - versions %s".formatted(buildProperties.getVersion()));
+    @ResponseHandling
+    public ResponseEntity<Object> home() {
+        return ResponseEntity.ofNullable("Model Gallery API - versions %s".formatted(buildProperties.getVersion()));
     }
 
     /**

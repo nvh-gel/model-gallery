@@ -3,20 +3,15 @@ package com.eden.gallery.controller;
 import com.eden.common.utils.ResponseModel;
 import com.eden.common.utils.SearchRequest;
 import com.eden.gallery.aop.LogExecutionTime;
+import com.eden.gallery.aop.ResponseHandling;
 import com.eden.gallery.service.ModelService;
 import com.eden.gallery.utils.ModelCriteria;
 import com.eden.gallery.utils.PageConverter;
 import com.eden.gallery.viewmodel.ModelVM;
 import jakarta.annotation.security.RolesAllowed;
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import static com.eden.gallery.utils.UserRole.ROLE_ADMIN;
 import static com.eden.gallery.utils.UserRole.ROLE_MODERATOR;
@@ -78,8 +73,9 @@ public class ModelController {
      */
     @GetMapping("/{id}")
     @LogExecutionTime
-    public ResponseModel getModelById(@PathVariable Long id) {
-        return ResponseModel.ok(modelService.findById(id));
+    @ResponseHandling
+    public ResponseEntity<Object> getModelById(@PathVariable Long id) {
+        return ResponseEntity.ofNullable(modelService.findById(id));
     }
 
     /**
