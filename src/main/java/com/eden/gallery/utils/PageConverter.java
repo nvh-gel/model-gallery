@@ -2,26 +2,29 @@ package com.eden.gallery.utils;
 
 import com.eden.common.utils.Paging;
 import com.eden.common.utils.ResponseModel;
+import com.eden.common.viewmodel.BaseVM;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 
 /**
  * Converter for paged data.
  */
-public class PageConverter<T> {
+public class PageConverter {
 
     /**
-     * Convert a page to response model.
+     * Convert a page of data to response model.
      *
-     * @param pagingData page to convert
+     * @param iterable data to convert
      * @return response model
      */
-    public ResponseModel toResponseFromPaging(Page<T> pagingData) {
-
-        ResponseModel responseModel = ResponseModel.ok(pagingData.stream().toList());
-        Paging paging = toPaging(pagingData);
-        responseModel.setExtra(paging);
-        return responseModel;
+    public ResponseModel toResponse(Iterable<? extends BaseVM> iterable) {
+        if (iterable instanceof Page<? extends BaseVM> pagingData) {
+            ResponseModel responseModel = ResponseModel.ok(pagingData.stream().toList());
+            Paging paging = toPaging(pagingData);
+            responseModel.setExtra(paging);
+            return responseModel;
+        }
+        return ResponseModel.ok(iterable);
     }
 
     /**
@@ -30,7 +33,7 @@ public class PageConverter<T> {
      * @param pagingData page of data
      * @return paging information
      */
-    private Paging toPaging(Page<T> pagingData) {
+    private Paging toPaging(Page<? extends BaseVM> pagingData) {
         Sort.Order order = pagingData.getSort().stream().findFirst().orElse(null);
         return new Paging(
                 pagingData.getNumber() + 1,
@@ -40,19 +43,5 @@ public class PageConverter<T> {
                 null == order ? null : order.getProperty(),
                 null == order ? null : order.getDirection().name()
         );
-    }
-
-    /**
-     * Check if iterable is a paged data and convert it to response model
-     *
-     * @param iter iterable of data
-     * @return response model
-     */
-    public ResponseModel toResponseFromIterable(Iterable<T> iter) {
-
-        if (iter instanceof Page) {
-            return toResponseFromPaging((Page<T>) iter);
-        }
-        return ResponseModel.error("Error returning data.");
     }
 }

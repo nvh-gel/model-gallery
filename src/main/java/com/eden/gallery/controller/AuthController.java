@@ -1,11 +1,11 @@
 package com.eden.gallery.controller;
 
-import com.eden.common.utils.ResponseModel;
 import com.eden.gallery.aop.LogExecutionTime;
+import com.eden.gallery.aop.ResponseHandling;
 import com.eden.gallery.service.AuthService;
 import com.eden.gallery.viewmodel.AuthRequest;
 import lombok.AllArgsConstructor;
-import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,11 +29,8 @@ public class AuthController {
      */
     @PostMapping("/login")
     @LogExecutionTime
-    public ResponseModel login(@RequestBody AuthRequest request) {
-        try {
-            return ResponseModel.ok(authService.login(request));
-        } catch (BadCredentialsException ex) {
-            return ResponseModel.unauthorized();
-        }
+    @ResponseHandling
+    public ResponseEntity<Object> login(@RequestBody AuthRequest request) {
+        return ResponseEntity.ofNullable(authService.login(request));
     }
 }

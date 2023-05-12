@@ -1,6 +1,5 @@
 package com.eden.gallery.controller;
 
-import com.eden.common.utils.ResponseModel;
 import com.eden.gallery.aop.LogExecutionTime;
 import com.eden.gallery.aop.ResponseHandling;
 import lombok.AllArgsConstructor;
@@ -39,7 +38,8 @@ public class RootController {
      */
     @GetMapping("/healthz")
     @LogExecutionTime
-    public ResponseModel health() {
-        return ResponseModel.ok("UP");
+    @ResponseHandling
+    public ResponseEntity<Object> health() {
+        return ResponseEntity.ofNullable("UP");
     }
 }

@@ -1,14 +1,21 @@
 package com.eden.gallery.controller;
 
-import com.eden.common.utils.ResponseModel;
 import com.eden.gallery.aop.LogExecutionTime;
+import com.eden.gallery.aop.ResponseHandling;
 import com.eden.gallery.service.ModelCrawlService;
-import com.eden.gallery.utils.PageConverter;
 import com.eden.gallery.viewmodel.ModelDataVM;
 import com.eden.gallery.viewmodel.ModelVM;
 import jakarta.annotation.security.RolesAllowed;
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import static com.eden.gallery.utils.UserRole.ROLE_ADMIN;
 import static com.eden.gallery.utils.UserRole.ROLE_MODERATOR;
@@ -22,8 +29,6 @@ import static com.eden.gallery.utils.UserRole.ROLE_MODERATOR;
 @AllArgsConstructor
 public class CrawlerController {
 
-    private final PageConverter<ModelDataVM> pageConverter = new PageConverter<>();
-
     private ModelCrawlService modelCrawlService;
 
     /**
@@ -33,8 +38,9 @@ public class CrawlerController {
      */
     @GetMapping("/model")
     @LogExecutionTime
-    public ResponseModel getCrawledModel() {
-        return ResponseModel.ok(modelCrawlService.findAll(1, 20));
+    @ResponseHandling
+    public ResponseEntity<Object> getCrawledModel() {
+        return ResponseEntity.ofNullable(modelCrawlService.findAll(1, 20));
     }
 
     /**
@@ -45,8 +51,9 @@ public class CrawlerController {
      */
     @GetMapping("/model/top/{top}")
     @LogExecutionTime
-    public ResponseModel findTopModels(@PathVariable int top) {
-        return ResponseModel.ok(modelCrawlService.findTopModels(top));
+    @ResponseHandling
+    public ResponseEntity<Object> findTopModels(@PathVariable int top) {
+        return ResponseEntity.ofNullable(modelCrawlService.findTopModels(top));
     }
 
     /**
@@ -58,8 +65,9 @@ public class CrawlerController {
      */
     @GetMapping("/model/{page}/{size}")
     @LogExecutionTime
-    public ResponseModel getCrawledModel(@PathVariable int page, @PathVariable int size) {
-        return pageConverter.toResponseFromIterable(modelCrawlService.findAll(page, size));
+    @ResponseHandling
+    public ResponseEntity<Object> getCrawledModel(@PathVariable int page, @PathVariable int size) {
+        return ResponseEntity.ofNullable(modelCrawlService.findAll(page, size));
     }
 
     /**
@@ -72,10 +80,11 @@ public class CrawlerController {
      */
     @GetMapping("/search/{page}/{size}")
     @LogExecutionTime
-    public ResponseModel getCrawledModelsByName(@PathVariable int page,
-                                                @PathVariable int size,
-                                                @RequestParam(value = "name", required = false) String name) {
-        return pageConverter.toResponseFromIterable(modelCrawlService.findByName(name, page, size));
+    @ResponseHandling
+    public ResponseEntity<Object> getCrawledModelsByName(@PathVariable int page,
+                                                         @PathVariable int size,
+                                                         @RequestParam(value = "name", required = false) String name) {
+        return ResponseEntity.ofNullable(modelCrawlService.findByName(name, page, size));
     }
 
     /**
@@ -86,8 +95,9 @@ public class CrawlerController {
      */
     @PutMapping("/model")
     @LogExecutionTime
-    public ResponseModel update(@RequestBody ModelDataVM request) {
-        return ResponseModel.updated(modelCrawlService.updateOnQueue(request));
+    @ResponseHandling
+    public ResponseEntity<Object> update(@RequestBody ModelDataVM request) {
+        return ResponseEntity.ofNullable(modelCrawlService.updateOnQueue(request));
     }
 
     /**
@@ -98,8 +108,9 @@ public class CrawlerController {
      */
     @PutMapping("/model/skip/{id}")
     @LogExecutionTime
-    public ResponseModel skipModel(@PathVariable String id) {
-        return ResponseModel.updated(modelCrawlService.skipModel(id));
+    @ResponseHandling
+    public ResponseEntity<Object> skipModel(@PathVariable String id) {
+        return ResponseEntity.ofNullable(modelCrawlService.skipModel(id));
     }
 
     /**
@@ -110,8 +121,9 @@ public class CrawlerController {
      */
     @PostMapping("/model/move")
     @LogExecutionTime
-    public ResponseModel moveModel(@RequestBody ModelVM request) {
-        return ResponseModel.created(modelCrawlService.moveModelData(request));
+    @ResponseHandling
+    public ResponseEntity<Object> moveModel(@RequestBody ModelVM request) {
+        return ResponseEntity.ofNullable(modelCrawlService.moveModelData(request));
     }
 
     /**
@@ -123,8 +135,9 @@ public class CrawlerController {
      */
     @PostMapping("/model/link")
     @LogExecutionTime
-    public ResponseModel linkModel(@RequestParam("modelId") Long modelId,
-                                   @RequestParam("objectId") String objectId) {
-        return ResponseModel.updated(modelCrawlService.linkModel(modelId, objectId));
+    @ResponseHandling
+    public ResponseEntity<Object> linkModel(@RequestParam("modelId") Long modelId,
+                                            @RequestParam("objectId") String objectId) {
+        return ResponseEntity.ofNullable(modelCrawlService.linkModel(modelId, objectId));
     }
 }

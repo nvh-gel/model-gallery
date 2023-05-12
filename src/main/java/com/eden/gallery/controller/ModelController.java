@@ -1,17 +1,22 @@
 package com.eden.gallery.controller;
 
-import com.eden.common.utils.ResponseModel;
 import com.eden.common.utils.SearchRequest;
 import com.eden.gallery.aop.LogExecutionTime;
 import com.eden.gallery.aop.ResponseHandling;
 import com.eden.gallery.service.ModelService;
 import com.eden.gallery.utils.ModelCriteria;
-import com.eden.gallery.utils.PageConverter;
 import com.eden.gallery.viewmodel.ModelVM;
 import jakarta.annotation.security.RolesAllowed;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import static com.eden.gallery.utils.UserRole.ROLE_ADMIN;
 import static com.eden.gallery.utils.UserRole.ROLE_MODERATOR;
@@ -24,8 +29,6 @@ import static com.eden.gallery.utils.UserRole.ROLE_MODERATOR;
 @AllArgsConstructor
 public class ModelController {
 
-    private final PageConverter<ModelVM> pageConverter = new PageConverter<>();
-
     private ModelService modelService;
 
     /**
@@ -37,8 +40,9 @@ public class ModelController {
     @RolesAllowed({ROLE_ADMIN, ROLE_MODERATOR})
     @PostMapping
     @LogExecutionTime
-    public ResponseModel createModel(@RequestBody ModelVM request) {
-        return ResponseModel.created(modelService.createOnQueue(request));
+    @ResponseHandling
+    public ResponseEntity<Object> createModel(@RequestBody ModelVM request) {
+        return ResponseEntity.ofNullable(modelService.createOnQueue(request));
     }
 
     /**
@@ -48,8 +52,9 @@ public class ModelController {
      */
     @GetMapping
     @LogExecutionTime
-    public ResponseModel getModels() {
-        return pageConverter.toResponseFromIterable(modelService.findAll(1, 10));
+    @ResponseHandling
+    public ResponseEntity<Object> getModels() {
+        return ResponseEntity.ofNullable(modelService.findAll(1, 10));
     }
 
     /**
@@ -61,8 +66,9 @@ public class ModelController {
      */
     @GetMapping("/{page}/{size}")
     @LogExecutionTime
-    public ResponseModel getModelsByPage(@PathVariable Integer page, @PathVariable Integer size) {
-        return pageConverter.toResponseFromIterable(modelService.findAll(page, size));
+    @ResponseHandling
+    public ResponseEntity<Object> getModelsByPage(@PathVariable Integer page, @PathVariable Integer size) {
+        return ResponseEntity.ofNullable(modelService.findAll(page, size));
     }
 
     /**
@@ -87,8 +93,9 @@ public class ModelController {
     @RolesAllowed({ROLE_ADMIN, ROLE_MODERATOR})
     @PutMapping
     @LogExecutionTime
-    public ResponseModel updateModel(@RequestBody ModelVM request) {
-        return ResponseModel.updated(modelService.updateOnQueue(request));
+    @ResponseHandling
+    public ResponseEntity<Object> updateModel(@RequestBody ModelVM request) {
+        return ResponseEntity.ofNullable(modelService.updateOnQueue(request));
     }
 
     /**
@@ -100,8 +107,9 @@ public class ModelController {
     @RolesAllowed({ROLE_ADMIN, ROLE_MODERATOR})
     @DeleteMapping("/{id}")
     @LogExecutionTime
-    public ResponseModel deleteModel(@PathVariable Long id) {
-        return ResponseModel.deleted(modelService.deleteOnQueue(id));
+    @ResponseHandling
+    public ResponseEntity<Object> deleteModel(@PathVariable Long id) {
+        return ResponseEntity.ofNullable(modelService.deleteOnQueue(id));
     }
 
     /**
@@ -113,7 +121,8 @@ public class ModelController {
     @RolesAllowed({ROLE_ADMIN, ROLE_MODERATOR})
     @PostMapping("/search")
     @LogExecutionTime
-    public ResponseModel searchModel(@RequestBody SearchRequest<ModelCriteria> request) {
-        return pageConverter.toResponseFromPaging(modelService.searchModel(request));
+    @ResponseHandling
+    public ResponseEntity<Object> searchModel(@RequestBody SearchRequest<ModelCriteria> request) {
+        return ResponseEntity.ofNullable(modelService.searchModel(request));
     }
 }

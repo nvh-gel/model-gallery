@@ -1,10 +1,11 @@
 package com.eden.gallery.controller;
 
-import com.eden.common.utils.ResponseModel;
 import com.eden.gallery.aop.LogExecutionTime;
+import com.eden.gallery.aop.ResponseHandling;
 import com.eden.gallery.service.UserService;
 import com.eden.gallery.viewmodel.UserVM;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -31,8 +32,9 @@ public class UserController {
      */
     @PostMapping("/register")
     @LogExecutionTime
-    public ResponseModel createUser(@RequestBody UserVM request) {
-        return ResponseModel.created(userService.createOnQueue(request, ROLE_USER));
+    @ResponseHandling
+    public ResponseEntity<Object> createUser(@RequestBody UserVM request) {
+        return ResponseEntity.ofNullable(userService.createOnQueue(request, ROLE_USER));
     }
 
     /**
@@ -42,7 +44,8 @@ public class UserController {
      */
     @GetMapping("/me")
     @LogExecutionTime
-    public ResponseModel getCurrentUserInfo() {
-        return ResponseModel.ok(userService.getCurrentUser());
+    @ResponseHandling
+    public ResponseEntity<Object> getCurrentUserInfo() {
+        return ResponseEntity.ofNullable(userService.getCurrentUser());
     }
 }
