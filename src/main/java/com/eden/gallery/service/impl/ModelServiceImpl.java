@@ -13,6 +13,8 @@ import com.eden.gallery.service.NicknameService;
 import com.eden.gallery.utils.ModelCriteria;
 import com.eden.gallery.viewmodel.ModelVM;
 import com.eden.gallery.viewmodel.NicknameVM;
+import com.eden.mapper.PagingMapper;
+import com.eden.mapper.PagingMapperImpl;
 import com.eden.queue.util.Action;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -38,6 +40,7 @@ import java.util.UUID;
 public class ModelServiceImpl implements ModelService {
 
     private final ModelMapper modelMapper = Mappers.getMapper(ModelMapper.class);
+    private final PagingMapper pagingMapper = new PagingMapperImpl();
     private ModelRepository modelRepository;
     private ModelProducer modelProducer;
     private NicknameService nicknameService;
@@ -157,8 +160,7 @@ public class ModelServiceImpl implements ModelService {
      */
     @Override
     public Page<ModelVM> searchModel(SearchRequest<ModelCriteria> request) {
-
-        Paging paging = Paging.fromPaging(request.getPaging());
+        Paging paging = pagingMapper.toPaging(request.getPaging());
         Pageable pageable = PageRequest.of(
                 paging.getPage() - 1,
                 paging.getPageSize(),

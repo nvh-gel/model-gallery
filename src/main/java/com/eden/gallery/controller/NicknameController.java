@@ -1,10 +1,11 @@
 package com.eden.gallery.controller;
 
-import com.eden.common.utils.ResponseModel;
 import com.eden.gallery.aop.LogExecutionTime;
+import com.eden.gallery.aop.ResponseHandling;
 import com.eden.gallery.service.NicknameService;
 import com.eden.gallery.viewmodel.NicknameVM;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,8 +32,9 @@ public class NicknameController {
      */
     @PostMapping
     @LogExecutionTime
-    public ResponseModel createNick(@RequestBody NicknameVM request) {
-        return ResponseModel.created(nicknameService.createOnQueue(request));
+    @ResponseHandling
+    public ResponseEntity<Object> createNick(@RequestBody NicknameVM request) {
+        return ResponseEntity.ofNullable(nicknameService.createOnQueue(request));
     }
 
     /**
@@ -43,8 +45,9 @@ public class NicknameController {
      */
     @PutMapping
     @LogExecutionTime
-    public ResponseModel updateNick(@RequestBody NicknameVM request) {
-        return ResponseModel.updated(nicknameService.updateOnQueue(request));
+    @ResponseHandling
+    public ResponseEntity<Object> updateNick(@RequestBody NicknameVM request) {
+        return ResponseEntity.ofNullable(nicknameService.updateOnQueue(request));
     }
 
     /**
@@ -55,7 +58,8 @@ public class NicknameController {
      */
     @DeleteMapping("/{id}")
     @LogExecutionTime
-    public ResponseModel deleteNick(@PathVariable Long id) {
-        return ResponseModel.deleted(nicknameService.deleteOnQueue(id));
+    @ResponseHandling
+    public ResponseEntity<Object> deleteNick(@PathVariable Long id) {
+        return ResponseEntity.ofNullable(nicknameService.deleteOnQueue(id));
     }
 }

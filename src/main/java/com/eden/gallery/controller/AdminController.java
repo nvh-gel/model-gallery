@@ -1,13 +1,19 @@
 package com.eden.gallery.controller;
 
-import com.eden.common.utils.ResponseModel;
 import com.eden.gallery.aop.LogExecutionTime;
+import com.eden.gallery.aop.ResponseHandling;
 import com.eden.gallery.service.UserService;
-import com.eden.gallery.utils.PageConverter;
 import com.eden.gallery.viewmodel.UserVM;
 import jakarta.annotation.security.RolesAllowed;
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import static com.eden.gallery.utils.UserRole.ROLE_ADMIN;
 
@@ -20,8 +26,6 @@ import static com.eden.gallery.utils.UserRole.ROLE_ADMIN;
 @AllArgsConstructor
 public class AdminController {
 
-    private final PageConverter<UserVM> pageConverter = new PageConverter<>();
-
     private UserService userService;
 
     /**
@@ -33,8 +37,9 @@ public class AdminController {
      */
     @PostMapping("/user")
     @LogExecutionTime
-    public ResponseModel addUserWithRole(@RequestBody UserVM request, @RequestParam("roles") String[] roles) {
-        return ResponseModel.created(userService.createOnQueue(request, roles));
+    @ResponseHandling
+    public ResponseEntity<Object> addUserWithRole(@RequestBody UserVM request, @RequestParam("roles") String[] roles) {
+        return ResponseEntity.ofNullable(userService.createOnQueue(request, roles));
     }
 
     /**
@@ -46,7 +51,8 @@ public class AdminController {
      */
     @GetMapping("/user/{page}/{size}")
     @LogExecutionTime
-    public ResponseModel getAllUsers(@PathVariable Integer page, @PathVariable Integer size) {
-        return pageConverter.toResponseFromIterable(userService.findAll(page, size));
+    @ResponseHandling
+    public ResponseEntity<Object> getAllUsers(@PathVariable Integer page, @PathVariable Integer size) {
+        return ResponseEntity.ofNullable(userService.findAll(page, size));
     }
 }
